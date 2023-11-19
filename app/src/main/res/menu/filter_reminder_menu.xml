@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/rmHalfHourBefore"
+        android:title="@string/remind_half_hour_before"
+        />
+
+    <item
+        android:id="@+id/rmHourBefore"
+        android:title="@string/remind_hour_before"
+        />
+
+    <item
+        android:id="@+id/rmDayBefore"
+        android:title="@string/remind_day_before"
+        />
+</menu>

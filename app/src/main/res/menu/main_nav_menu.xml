@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/drawMenu_lists">
+        <menu>
+            <item
+                android:id="@+id/drawMenu_study"
+                android:icon="@color/primary_color1"
+                android:title="Study" />
+            <item
+                android:id="@+id/drawMenu_home"
+                android:icon="@color/primary_color1"
+                android:title="Home" />
+            <item
+                android:id="@+id/drawMenu_hobby"
+                android:icon="@color/primary_color1"
+                android:title="Hobby" />
+            <item
+                android:id="@+id/drawMenu_work"
+                android:icon="@color/primary_color1"
+                android:title="Work" />
+            <item
+                android:id="@+id/drawMenu_shopping"
+                android:icon="@color/primary_color1"
+                android:title="Shopping" />
+            <item
+                android:id="@+id/addEditListFragment"
+                android:title="@string/add_new_list"
+                android:icon="@drawable/ic_add"
+                />
+        </menu>
+    </item>
+
+    <group>
+        <item android:id="@+id/settingsFragment"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_settings"/>
+        <item android:id="@+id/aboutAppFragment"
+            android:title="@string/about_app"
+            android:icon="@drawable/ic_info"/>
+    </group>
+</menu>

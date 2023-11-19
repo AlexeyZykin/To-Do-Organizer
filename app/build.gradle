@@ -1,0 +1,86 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+}
+
+android {
+    namespace 'com.example.vkr_todolist'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.vkr_todolist"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures{
+        viewBinding true
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.10.0'
+    //start
+    //Room
+    implementation 'androidx.room:room-ktx:2.5.1'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.3.0'
+    kapt 'androidx.room:room-compiler:2.5.1'
+
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    //navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    //splashScreen
+    implementation 'androidx.core:core-splashscreen:1.0.1'
+    //CardView
+    implementation "androidx.cardview:cardview:1.0.0"
+    //ImagePicker
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+    //size for image
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    //easy permission
+    implementation 'pub.devrel:easypermissions:3.0.0'
+    //end
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    testImplementation 'junit:junit:4.13.2'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    androidTestImplementation 'androidx.navigation:navigation-testing:2.5.3'
+    testImplementation 'org.mockito:mockito-core:2.24.5'
+    androidTestImplementation 'org.mockito:mockito-android:2.24.5'
+
+//    debugImplementation "io.mockk:mockk-android:1.13.1"
+    debugImplementation "androidx.fragment:fragment-testing:1.5.7"
+}

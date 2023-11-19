@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="HeadlineText" parent="android:Widget.TextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="TitleText" parent="android:Widget.TextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="BodyText" parent="android:Widget.TextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="LabelText" parent="android:Widget.TextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="ChipText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/hint_light</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+
+
+</resources>

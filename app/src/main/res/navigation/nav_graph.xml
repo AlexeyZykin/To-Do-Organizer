@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/taskFragment">
+
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.example.vkr_todolist.ui.task.TaskFragment"
+        android:label="@string/it_tasks"
+        tools:layout="@layout/fragment_task" >
+        <action
+            android:id="@+id/action_taskFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_up" />
+        <action
+            android:id="@+id/action_taskFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            app:popEnterAnim="@anim/slide_right_enter"
+            app:popExitAnim="@anim/slide_right_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/noteFragment"
+        android:name="com.example.vkr_todolist.ui.note.NoteFragment"
+        android:label="@string/it_notes"
+        tools:layout="@layout/fragment_note" >
+        <action
+            android:id="@+id/action_noteFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment"
+            app:enterAnim="@anim/slide_up" />
+        <action
+            android:id="@+id/action_noteFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            app:popEnterAnim="@anim/slide_right_enter"
+            app:popExitAnim="@anim/slide_right_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/productivityFragment"
+        android:name="com.example.vkr_todolist.ui.productivity.ProductivityFragment"
+        android:label="@string/it_productivity"
+        tools:layout="@layout/fragment_productivity" />
+    <fragment
+        android:id="@+id/addEditNoteFragment"
+        android:name="com.example.vkr_todolist.ui.note.AddEditNoteFragment"
+        android:label="@string/create_note"
+        tools:layout="@layout/fragment_add_edit_note" >
+        <argument
+            android:name="note"
+            app:argType="com.example.vkr_todolist.data.model.Note"
+            app:nullable="true"/>
+        <argument
+            android:name="listName"
+            app:argType="com.example.vkr_todolist.data.model.ListItem"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditTaskFragment"
+        android:name="com.example.vkr_todolist.ui.task.AddEditTaskFragment"
+        android:label="@string/create_task"
+        tools:layout="@layout/fragment_add_edit_task" >
+        <argument
+            android:name="task"
+            app:argType="com.example.vkr_todolist.data.model.Task"
+            app:nullable="true" />
+        <argument
+            android:name="listName"
+            app:argType="com.example.vkr_todolist.data.model.ListItem"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutAppFragment"
+        android:name="com.example.vkr_todolist.ui.settings.AboutAppFragment"
+        android:label="@string/about_app"
+        tools:layout="@layout/fragment_about_app" />
+    <dialog
+        android:id="@+id/addEditListFragment"
+        android:name="com.example.vkr_todolist.ui.list.AddEditListFragment"
+        android:label="@string/create_list"
+        tools:layout="@layout/fragment_add_edit_list" >
+        <argument
+            android:name="listItem"
+            app:argType="com.example.vkr_todolist.data.model.ListItem"
+            app:nullable="true"
+            />
+    </dialog>
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.example.vkr_todolist.ui.list.ListFragment"
+        android:label="@string/list"
+        tools:layout="@layout/fragment_list" >
+        <argument
+            android:name="listItem"
+            app:argType="com.example.vkr_todolist.data.model.ListItem" />
+        <action
+            android:id="@+id/action_listFragment_to_addEditListFragment"
+            app:destination="@id/addEditListFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment"
+            app:enterAnim="@anim/slide_up" />
+        <action
+            android:id="@+id/action_listFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_up" />
+        <action
+            android:id="@+id/action_listFragment_to_addEditEventFragment"
+            app:destination="@id/addEditEventFragment" />
+    </fragment><action android:id="@+id/action_global_addEditListFragment" app:destination="@id/addEditListFragment"/>
+    <fragment
+        android:id="@+id/listOfTasksFragment"
+        android:name="com.example.vkr_todolist.ui.list.ListOfTasksFragment"
+        android:label="fragment_list_of_tasks"
+        tools:layout="@layout/fragment_list_of_tasks" >
+        <argument
+            android:name="listItem"
+            app:argType="com.example.vkr_todolist.data.model.ListItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/listOfNotesFragment"
+        android:name="com.example.vkr_todolist.ui.list.ListOfNotesFragment"
+        android:label="fragment_list_of_notes"
+        tools:layout="@layout/fragment_list_of_notes" >
+        <argument
+            android:name="listItem"
+            app:argType="com.example.vkr_todolist.data.model.ListItem" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_listFragment"
+        app:destination="@id/listFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.vkr_todolist.ui.settings.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/completedTasksFragment"
+        android:name="com.example.vkr_todolist.ui.task.CompletedTasksFragment"
+        android:label="@string/completed_tasks"
+        tools:layout="@layout/fragment_completed_tasks" >
+        <action
+            android:id="@+id/action_completedTasksFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_up" />
+    </fragment>
+    <fragment
+        android:id="@+id/importantTasksFragment"
+        android:name="com.example.vkr_todolist.ui.task.ImportantTasksFragment"
+        android:label="@string/important_tasks"
+        tools:layout="@layout/fragment_important_tasks" >
+        <action
+            android:id="@+id/action_importantTasksFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_up" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.vkr_todolist.ui.search.SearchFragment"
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="typeName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_addEditEventFragment"
+            app:destination="@id/addEditEventFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_importantTasksFragment"
+        app:destination="@id/importantTasksFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+    <action
+        android:id="@+id/action_global_completedTasksFragment"
+        app:destination="@id/completedTasksFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+    <action
+        android:id="@+id/action_global_aboutAppFragment"
+        app:destination="@id/aboutAppFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.example.vkr_todolist.ui.event.EventFragment"
+        android:label="@string/it_event"
+        tools:layout="@layout/fragment_event" >
+        <action
+            android:id="@+id/action_eventFragment_to_addEditEventFragment"
+            app:destination="@id/addEditEventFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            app:popEnterAnim="@anim/slide_right_enter"
+            app:popExitAnim="@anim/slide_right_exit" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_productivityFragment"
+        app:destination="@id/productivityFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+    <dialog
+        android:id="@+id/addEditEventFragment"
+        android:name="com.example.vkr_todolist.ui.event.AddEditEventFragment"
+        android:label="fragment_add_edit_event"
+        tools:layout="@layout/fragment_add_edit_event" >
+        <argument
+            android:name="event"
+            app:argType="com.example.vkr_todolist.data.model.Event"
+            app:nullable="true" />
+        <argument
+            android:name="listName"
+            app:argType="com.example.vkr_todolist.data.model.ListItem"
+            app:nullable="true" />
+    </dialog>
+    <fragment
+        android:id="@+id/listOfEventsFragment"
+        android:name="com.example.vkr_todolist.ui.list.ListOfEventsFragment"
+        android:label="fragment_list_of_events"
+        tools:layout="@layout/fragment_list_of_events" >
+        <argument
+            android:name="listItem"
+            app:argType="com.example.vkr_todolist.data.model.ListItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/pomodoroTimerFragment"
+        android:name="com.example.vkr_todolist.ui.pomodoroTimer.PomodoroTimerFragment"
+        android:label="@string/pomodoro_timer"
+        tools:layout="@layout/fragment_pomodoro_timer" />
+    <action
+        android:id="@+id/action_global_pomodoroTimerFragment"
+        app:destination="@id/pomodoroTimerFragment"
+        app:enterAnim="@anim/push_left_in"
+        app:exitAnim="@anim/push_left_out"
+        app:popEnterAnim="@anim/push_right_in"
+        app:popExitAnim="@anim/push_right_out" />
+</navigation>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    tools:context=".ui.pomodoroTimer.PomodoroTimerFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/timerBar"
+            style="@style/ProgressBarTimer"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.34" />
+
+        <TextView
+            android:id="@+id/tvTimer"
+            style="@style/BodyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="timer"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/timerBar"
+            app:layout_constraintEnd_toEndOf="@+id/timerBar"
+            app:layout_constraintStart_toStartOf="@+id/timerBar"
+            app:layout_constraintTop_toTopOf="@+id/timerBar" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/bPlayPauseTimer"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/play_timer"
+            android:textSize="20sp"
+            app:chipIcon="@drawable/ic_play"
+            app:chipIconSize="24dp"
+            app:layout_constraintEnd_toStartOf="@+id/bStopTimer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timerBar" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/bStopTimer"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/stop_timer"
+            android:textSize="20sp"
+            app:chipIcon="@drawable/ic_stop"
+            app:chipIconSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bPlayPauseTimer"
+            app:layout_constraintTop_toBottomOf="@+id/timerBar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

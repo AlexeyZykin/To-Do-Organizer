@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/allTasks"
+        android:title="@string/all_tasks"
+        />
+
+    <item
+        android:id="@+id/todayTasks"
+        android:title="@string/today_tasks"
+        />
+
+    <item
+        android:id="@+id/tomorrowTasks"
+        android:title="@string/tomorrow_tasks"
+        />
+
+    <item
+        android:id="@+id/laterTasks"
+        android:title="@string/later_tasks"
+        />
+
+    <item
+        android:id="@+id/noDatesTasks"
+        android:title="@string/no_dates_tasks"
+        />
+</menu>

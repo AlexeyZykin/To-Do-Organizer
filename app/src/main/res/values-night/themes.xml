@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.VKR_Diary" parent="Theme.Material3.Dark">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary_color1</item>
+        <item name="colorPrimaryVariant">@color/purple</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- colorAccent is used as the default value for colorControlActivated
+               which is used to tint widgets -->
+        <item name="colorAccent">@color/primary_color1</item>
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="buttonStyle">@style/Widget.Theme.VKR_ToDoList.Button</item>
+        <!--        Text on toolbar-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!--        Fab-->
+        <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
+        <!--    ActionBarItemColor-->
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <!--        TabLayout-->
+        <item name="colorSecondaryContainer">@android:color/transparent</item>
+        <item name="bottomNavigationStyle">@style/bottomNavigationView</item>
+        <!--        TimePicker-->
+    </style>
+
+    <style name="PopupMenuStyle" parent="@style/Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@color/default_dark</item>
+        <item name="android:popupElevation">8dp</item>
+        <item name="android:textAppearanceLargePopupMenu">@color/white</item>
+        <item name="android:textAppearanceSmallPopupMenu">@color/greyWhite</item>
+    </style>
+
+
+
+    <style name="DialogStyle" parent="Theme.Material3.Dark.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="bottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@android:color/transparent </item>
+        <item name="itemIconTint">@color/bottom_nav_selector</item>
+        <item name="itemTextColor">@color/bottom_nav_selector</item>
+        <item name="labelVisibilityMode">unlabeled</item>
+    </style>
+
+    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
+        <item name="shapeAppearanceOverlay">@style/FabShapeStyle</item>
+    </style>
+
+    <style name="FabShapeStyle" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">30%</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/white</item>
+    </style>
+
+</resources>

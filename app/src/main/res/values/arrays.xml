@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="note_style_array">
+        <item>@string/linear</item>
+        <item>@string/grid</item>
+    </string-array>
+    <string-array name="note_style_values">
+        <item>Linear</item>
+        <item>Grid</item>
+    </string-array>
+
+    <string-array name="theme_array">
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+        <item>@string/system_theme</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>@string/light_theme_value</item>
+        <item>@string/dark_theme_value</item>
+        <item>@string/system_theme_value</item>
+    </string-array>
+
+    <string-array name="text_size_array">
+        <item>12 sp</item>
+        <item>14 sp</item>
+        <item>16 sp</item>
+        <item>18 sp</item>
+        <item>20 sp</item>
+    </string-array>
+    <string-array name="text_size_values">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+    </string-array>
+
+    <string-array name="app_language_array">
+        <item>English (English)</item>
+        <item>Русский (Russian)</item>
+    </string-array>
+    <string-array name="app_language_values">
+        <item>@string/lang_value_en</item>
+        <item>@string/default_lang_value</item>
+    </string-array>
+
+
+</resources>

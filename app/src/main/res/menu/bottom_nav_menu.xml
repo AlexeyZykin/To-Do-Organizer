@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="@string/it_tasks"
+        android:id="@+id/taskFragment"
+        android:icon="@drawable/ic_task"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:title="@string/it_notes"
+        android:id="@+id/noteFragment"
+        android:icon="@drawable/ic_note"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:title="@string/it_event"
+        android:id="@+id/eventFragment"
+        android:icon="@drawable/ic_event"
+        app:showAsAction="ifRoom"
+        />
+</menu>

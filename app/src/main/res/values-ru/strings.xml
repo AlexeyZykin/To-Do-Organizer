@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Daily Up - Ежедневник</string>
+
+    <!--    Bottom navigation menu-->
+    <string name="it_tasks">Задачи</string>
+    <string name="it_notes">Заметки</string>
+    <string name="it_productivity">Продуктивность</string>
+    <string name="it_event">События</string>
+
+    <!--    DrawerLayout menu-->
+    <string name="drawMenu_lists">Списки</string>
+    <string name="logo_name">Daily Up</string>
+    <string name="settings">Настройки</string>
+    <string name="about_app">О приложении</string>
+    <string name="add_new_list">Добавить список</string>
+    <string name="important_tasks">Важные задачи</string>
+    <string name="completed_tasks">Выполненные задачи</string>
+
+    <!--    CardView Note-->
+    <string name="note_title">Название</string>
+    <string name="note_desc">Описание</string>
+    <string name="note_time">Время</string>
+
+    <string name="addNewItem">добавить</string>
+    <string name="title">Название</string>
+    <string name="Description">Описание</string>
+    <string name="delete">Удалить</string>
+
+    <!--    Snackbar-->
+    <string name="snackbar_deleted">Успешно удалено</string>
+    <string name="undo">Отменить</string>
+    <string name="snackbar_addTitle">Пожалуйста добавьте название</string>
+    <string name="snackbar_addDesc">Пожалуйста добавьте описание</string>
+    <string name="snackbar_selectList">Пожалуйста укажите список</string>
+    <string name="snackbar_datePicker">Пожалуйста укажите дату события</string>
+
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+
+    <!--    Fragment labels-->
+    <string name="create_list">Создать список</string>
+
+    <!--Empty View-->
+    <string name="empty_tasks">Список задач пуст</string>
+    <string name="empty_tasks_add">Нажмите \"+\" для создания задачи</string>
+    <string name="empty_notes">Список заметок пуст</string>
+    <string name="empty_notes_add">Нажмите \"+\" для создания заметки</string>
+    <string name="empty_completed_tasks">Нет выполненных задач</string>
+    <string name="empty_completed_tasks_add">Выполняйте задачи для пополнения этого списка</string>
+    <string name="empty_important_tasks">Нет важных задач</string>
+    <string name="empty_important_tasks_add">Помечайте задачи как важные для заполнения списка</string>
+    <string name="empty_events">Список событий пуст</string>
+    <string name="empty_events_add">Нажмите \"+\" для создания события</string>
+
+    <!--    Nav menu / Dialog-->
+    <string name="edit_list">Редактировать список</string>
+    <string name="delete_list">Удалить список</string>
+    <string name="delete_list_dialog">Вы точно хотите удалить этот список?</string>
+    <string name="cancel_dialog">Отмена</string>
+    <string name="dialog_discard_title">Отменить изменения?</string>
+    <string name="dialog_discard_desc">Вы уверены, что хотите отменить эти изменения? Все изменения будут потеряны.</string>
+    <string name="dialog_discard_button">Отменить</string>
+    <string name="delete_completed_tasks">Удалить все выполненные задачи</string>
+    <string name="delete_comp_tasks_dialog">Вы точно хотите удалить выполненные задачи?</string>
+    <string name="search">Поиск</string>
+    <string name="all_tasks">Все задачи</string>
+    <string name="today_tasks">Сегодня</string>
+    <string name="tomorrow_tasks">Завтра</string>
+    <string name="later_tasks">Позже</string>
+    <string name="no_dates_tasks">Без даты</string>
+    <string name="all_events">Все события</string>
+
+    <!--    Components-->
+    <string name="choose_color">Добавить цвет</string>
+    <string name="due_date">Дата</string>
+    <string name="time">Set time</string>
+    <string name="reminder">Напоминание</string>
+    <string name="select_list">Список</string>
+    <string name="attachment_image">Изображение</string>
+    <string name="indefinite_task">Бессрочная</string>
+    <string name="save">Сохранить</string>
+    <string name="week">За неделю</string>
+    <string name="month">За месяц</string>
+    <string name="created_tasks">Создано задач</string>
+    <string name="create_event">Создать событие</string>
+    <string name="countdown_finished">Закончилось</string>
+    <string name="completed_task_count">Выполнено задач</string>
+    <string name="create_note">Создать заметку</string>
+    <string name="create_task">Создать задачу</string>
+    <string name="list">Список</string>
+    <string name="delete_end_events">Удалить прошедшие события</string>
+    <string name="delete_end_events_dialog">Вы точно хотите удалить все прошедшие события?</string>
+    <string name="delete_task">Удалить задачу</string>
+    <string name="delete_task_dialog">Вы уверены, что хотите удалить данную задачу?</string>
+    <string name="delete_event">Удалить событие</string>
+    <string name="delete_event_dialog">Вы уверены, что хотите удалить данное событие?</string>
+    <string name="delete_note">Удалить заметку</string>
+    <string name="delete_note_dialog">Вы уверены, что хотите удалить данную заметку?</string>
+    <string name="completed">Сделано</string>
+    <string name="pomodoro_timer">Помодоро таймер</string>
+    <string name="notification_desc">Напоминание</string>
+    <string name="remind_half_hour_before">За полчаса</string>
+    <string name="remind_hour_before">За час</string>
+    <string name="remind_day_before">За день</string>
+    <string name="play_timer">Старт</string>
+    <string name="pause_timer">Пауза</string>
+    <string name="stop_timer">Стоп</string>
+    <string name="pomodoro_msg_break">Время для 5-минутного перерыва</string>
+    <string name="pomodoro_msg_work">Время продолжать работу</string>
+    <string name="pomodoro_title">Помодоро таймер</string>
+
+    <!--    Settings-->
+    <string name="general">Общие</string>
+    <string name="note_style">Стиль заметок</string>
+    <string name="theme">Тема</string>
+    <string name="note_text_settings">Настройки текста заметок</string>
+    <string name="title_text_size">Размер заголовков</string>
+    <string name="content_text_size">Размер описания</string>
+    <string name="language">Язык</string>
+
+    <string name="storage_permission_text">Этому приложению необходим доступ к вашему хранилищу.</string>
+
+    <string name="theme_key">theme_key</string>
+    <string name="system_theme_value">system_theme_value</string>
+    <string name="light_theme_value">light_theme_value</string>
+    <string name="dark_theme_value">dark_theme_value</string>
+    <string name="liveData_task_exception">Invalid selectedTaskFilter value</string>
+    <string name="language_key">language_key</string>
+    <string name="default_lang_value">ru</string>
+    <string name="lang_value_en">en</string>
+
+
+    <string name="light_theme">Светлая тема</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="system_theme">Системная</string>
+    <string name="grid">Сетка</string>
+    <string name="linear">Список</string>
+
+
+    <!--    About app-->
+    <string name="about_app_name">Название приложения - Daily Up (version 1.0)</string>
+    <string name="about_app_desc1">Это мобильное приложение создано для того, чтобы помочь вам планировать свои ежедневные задачи на Android.</string>
+    <string name="about_app_contacts">Контакты email: alex.zykin15@gmail.com </string>
+
+    <!--    Notification-->
+    <string name="channel_name">Channel name</string>
+    <string name="channel_description">Channel description</string>
+    <string name="mark_as_done">Mark as done</string>
+
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

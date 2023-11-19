@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/group_filters"
+        android:orderInCategory="3"
+        >
+
+        <item
+            android:id="@+id/importantTasksFragment"
+            android:title="@string/important_tasks"
+            android:icon="@drawable/ic_star"
+            />
+        <item
+            android:id="@+id/completedTasksFragment"
+            android:title="@string/completed_tasks"
+            android:icon="@drawable/ic_completed_tasks"
+            />
+        <item
+            android:id="@+id/productivityFragment"
+            android:title="@string/it_productivity"
+            android:icon="@drawable/ic_productivity"
+            />
+        <item
+            android:id="@+id/pomodoroTimerFragment"
+            android:title="@string/pomodoro_timer"
+            android:icon="@drawable/ic_pomodoro_timer"
+            />
+    </group>
+
+    <group android:id="@+id/group_lists"
+        android:orderInCategory="1"
+        >
+    </group>
+
+    <group android:id="@+id/group_general"
+        android:orderInCategory="4">
+        <item android:id="@+id/settingsFragment"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_settings"/>
+    </group>
+</menu>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.event.AddEditEventFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView19"
+                    style="@style/HeadlineText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/create_event" />
+
+                <EditText
+                    android:id="@+id/edTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView19"
+                    android:layout_alignStart="@+id/chipDatePicker"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_toStartOf="@id/bSaveEvent"
+                    android:ems="10"
+                    android:hint="@string/title"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:textSize="20sp" />
+
+
+                <Button
+                    android:id="@+id/bSaveEvent"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/edTitle"
+                    android:layout_alignBottom="@+id/edTitle"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="0dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/save"
+                    android:textSize="20sp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSelectList"
+                    style="@style/Widget.Material3.Chip.Assist.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edTitle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/select_list"
+                    app:chipIcon="@drawable/ic_list" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDatePicker"
+                    style="@style/Widget.Material3.Chip.Assist.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chipSelectList"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/due_date"
+                    app:chipIcon="@drawable/ic_due_date"
+                    app:closeIconEnabled="false"
+                    app:closeIconVisible="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipReminder"
+                    style="@style/Widget.Material3.Chip.Assist.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chipDatePicker"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="@string/reminder"
+                    android:textSize="16sp"
+                    app:chipIcon="@drawable/ic_reminder" />
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+</FrameLayout>

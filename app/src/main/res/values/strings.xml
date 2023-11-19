@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">Daily Up - Ежедневник</string>
+
+    <!--    Bottom navigation menu-->
+    <string name="it_tasks">Tasks</string>
+    <string name="it_notes">Notes</string>
+    <string name="it_productivity">Productivity</string>
+    <string name="it_event">Events</string>
+
+    <!--    DrawerLayout menu-->
+    <string name="drawMenu_lists">Lists</string>
+    <string name="logo_name">Daily Up</string>
+    <string name="settings">Settings</string>
+    <string name="about_app">About app</string>
+    <string name="add_new_list">Add new list</string>
+    <string name="important_tasks">Important tasks</string>
+    <string name="completed_tasks">Completed tasks</string>
+
+    <!--    CardView Note-->
+    <string name="note_title">Title</string>
+    <string name="note_desc">Description</string>
+    <string name="note_time">Time</string>
+
+    <string name="addNewItem">add</string>
+    <string name="title">Title</string>
+    <string name="Description">Description</string>
+    <string name="delete">Delete</string>
+
+    <!--    Snackbar-->
+    <string name="snackbar_deleted">Deleted Successfully</string>
+    <string name="undo">Undo</string>
+    <string name="snackbar_addTitle">Please add title</string>
+    <string name="snackbar_addDesc">Please add description</string>
+    <string name="snackbar_selectList">Please select list</string>
+    <string name="snackbar_datePicker">Please select an event date</string>
+
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+
+    <!--    Fragment labels-->
+    <string name="create_list">Create list</string>
+
+    <!--Empty View-->
+    <string name="empty_tasks">The task list is empty</string>
+    <string name="empty_tasks_add">Tap \"+\" to create a task</string>
+    <string name="empty_notes">The list of notes is empty</string>
+    <string name="empty_notes_add">Tap \"+\" to create a note</string>
+    <string name="empty_completed_tasks">No completed tasks</string>
+    <string name="empty_completed_tasks_add">Complete tasks to complete the list</string>
+    <string name="empty_important_tasks">No important tasks</string>
+    <string name="empty_important_tasks_add">Flag tasks as important to complete the list</string>
+    <string name="empty_events">The event list is empty</string>
+    <string name="empty_events_add">Tap \"+\" to create event</string>
+
+    <!--    Nav menu / Dialog-->
+    <string name="edit_list">Edit list</string>
+    <string name="delete_list">Delete list</string>
+    <string name="delete_list_dialog">Do you want to delete this list?</string>
+    <string name="cancel_dialog">Cancel</string>
+    <string name="dialog_discard_title">Discard changes?</string>
+    <string name="dialog_discard_desc">Are you sure you want to discard these changes? All the changes will be lost.</string>
+    <string name="dialog_discard_button">Discard</string>
+    <string name="delete_completed_tasks">Delete all completed tasks</string>
+    <string name="delete_comp_tasks_dialog">Do you want to delete completed tasks?</string>
+    <string name="search">Search</string>
+    <string name="all_tasks">All tasks</string>
+    <string name="today_tasks">Today</string>
+    <string name="tomorrow_tasks">Tomorrow</string>
+    <string name="later_tasks">Later</string>
+    <string name="no_dates_tasks">No dates</string>
+    <string name="all_events">All events</string>
+
+    <!--    Components-->
+    <string name="choose_color">Add color</string>
+    <string name="due_date">Due date</string>
+    <string name="time">Set time</string>
+    <string name="reminder">Set reminder</string>
+    <string name="select_list">Select list</string>
+    <string name="attachment_image">Add image</string>
+    <string name="indefinite_task">Indefinite</string>
+    <string name="save">Save</string>
+    <string name="week">This week</string>
+    <string name="month">This month</string>
+    <string name="created_tasks">Created tasks</string>
+    <string name="create_event">Create event</string>
+    <string name="countdown_finished">Ended</string>
+    <string name="completed_task_count">Completed tasks</string>
+    <string name="create_note">Create note</string>
+    <string name="create_task">Create task</string>
+    <string name="list">List</string>
+    <string name="delete_end_events">Delete ended events</string>
+    <string name="delete_end_events_dialog">Are you sure you want to delete all ended events?</string>
+    <string name="delete_task">Delete task</string>
+    <string name="delete_task_dialog">Are you sure you want to delete this task?</string>
+    <string name="delete_event">Delete event</string>
+    <string name="delete_event_dialog">Are you sure you want to delete this event?</string>
+    <string name="delete_note">Delete note</string>
+    <string name="delete_note_dialog">Are you sure you want to delete this note?</string>
+    <string name="completed">Сделано</string>
+    <string name="pomodoro_timer">Pomodoro timer</string>
+    <string name="notification_desc">Напоминание</string>
+    <string name="remind_half_hour_before">One hour before </string>
+    <string name="remind_hour_before">Thirty minutes before</string>
+    <string name="remind_day_before">Day before</string>
+    <string name="play_timer">Start</string>
+    <string name="pause_timer">Pause</string>
+    <string name="stop_timer">Stop</string>
+    <string name="pomodoro_msg_break">Time for a 5-minute break</string>
+    <string name="pomodoro_msg_work">It\'s time to keep working</string>
+    <string name="pomodoro_title">Pomodoro timer</string>
+
+    <!--    Notification-->
+    <string name="channel_name">Channel - daily up</string>
+    <string name="channel_description">Channel description</string>
+    <string name="mark_as_done">Mark as done</string>
+
+    <!--    Settings-->
+    <string name="general">General</string>
+    <string name="note_style">Note style</string>
+    <string name="theme">Theme</string>
+    <string name="note_text_settings">Note text settings</string>
+    <string name="title_text_size">Title text size</string>
+    <string name="content_text_size">Content text size</string>
+    <string name="language">Language</string>
+
+    <string name="storage_permission_text">This app needs access to your storage.</string>
+
+    <string name="theme_key">theme_key</string>
+    <string name="system_theme_value">system_theme_value</string>
+    <string name="light_theme_value">light_theme_value</string>
+    <string name="dark_theme_value">dark_theme_value</string>
+    <string name="liveData_task_exception">Invalid selectedTaskFilter value</string>
+    <string name="language_key">language_key</string>
+    <string name="default_lang_value">ru</string>
+    <string name="light_theme">Light theme</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="system_theme">System default</string>
+    <string name="grid">Grid</string>
+    <string name="linear">Linear</string>
+    <string name="lang_value_en">en</string>
+
+
+
+    <!--    About app-->
+    <string name="about_app_name">Application name - Daily Up (version 1.0)</string>
+    <string name="about_app_desc1">This mobile app is designed to help you plan your daily tasks on Android.</string>
+    <string name="about_app_contacts">Contacts email: alex.zykin15@gmail.com </string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

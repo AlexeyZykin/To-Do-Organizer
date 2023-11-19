@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary_color1">#d1c6f3</color>
+    <color name="primary_color2">#e9bcac</color>
+    <color name="red">#D21312</color>
+    <color name="yellow">#FFD95A</color>
+    <color name="purple">#98ADDA</color>
+    <color name="pink">#F6BEE5</color>
+    <color name="green">#b7cc8b</color>
+    <color name="dark_green">#245953</color>
+    <color name="bottom_icon">#7c7c7c</color>
+    <color name="rose">#b5838d</color>
+
+<!--    Light theme-->
+    <color name="light_background">#eef0f2</color>
+    <color name="light_components">#ecf0f3</color>
+    <color name="hint_text">#979798</color>
+    <color name="hint_light">#979798</color>
+    <color name="default_light">#FCFCFC</color>
+
+<!--    Dark theme-->
+    <color name="default_dark">#1c1b20</color>
+    <color name="dark">#121212</color>
+
+<!--    Shades of grey-->
+    <color name="dullGrey">#E0E0E0</color>
+    <color name="greyWhite">#BDBDBD</color>
+    <color name="grey">#424242</color>
+    <color name="deepDarkGrey">#212121</color>
+
+
+</resources>
