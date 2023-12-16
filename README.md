@@ -4,6 +4,7 @@
 + ### Kotlin
 + ### MVVM
 + ### Android Jetpack (ViewModel, LiveData, Room, Navigation)
++ ### Coroutines
 ____
 ## ToDo Organizer template final preview
 ![Template](https://github.com/AlexeyZykin/To-Do-Organizer/assets/79928354/d183eb8b-c54d-4c81-91b0-f408a76caa01)
