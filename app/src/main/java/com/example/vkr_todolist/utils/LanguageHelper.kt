@@ -1,8 +1,6 @@
 package com.example.vkr_todolist.utils
 
 import android.content.Context
-import android.content.res.Configuration
-import android.util.Log
 import java.util.*
 
 object LanguageHelper {
