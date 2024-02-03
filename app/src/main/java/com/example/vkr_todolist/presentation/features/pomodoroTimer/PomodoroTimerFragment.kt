@@ -16,11 +16,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.PomodoroTimer
+import com.example.vkr_todolist.cache.room.model.PomodoroTimer
 import com.example.vkr_todolist.databinding.FragmentPomodoroTimerBinding
 import com.example.vkr_todolist.presentation.main.MainViewModel
-import com.example.vkr_todolist.utils.Constants
-import com.example.vkr_todolist.utils.NotificationHelper
+import com.example.vkr_todolist.presentation.utils.Constants
+import com.example.vkr_todolist.presentation.utils.NotificationHelper
 import java.util.*
 
 

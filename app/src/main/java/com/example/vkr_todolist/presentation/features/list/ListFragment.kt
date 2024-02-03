@@ -14,7 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.databinding.FragmentListBinding
-import com.example.vkr_todolist.presentation.features.dialogs.DeleteDialog
+import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
 import com.example.vkr_todolist.presentation.main.MainActivity
 import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.google.android.material.tabs.TabLayoutMediator

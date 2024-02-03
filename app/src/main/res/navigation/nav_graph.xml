@@ -51,11 +51,11 @@
         tools:layout="@layout/fragment_add_edit_note" >
         <argument
             android:name="note"
-            app:argType="com.example.vkr_todolist.data.source.local.model.Note"
+            app:argType="com.example.vkr_todolist.cache.room.model.Note"
             app:nullable="true"/>
         <argument
             android:name="listName"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem"
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
             app:nullable="true" />
     </fragment>
     <fragment
@@ -65,11 +65,11 @@
         tools:layout="@layout/fragment_add_edit_task" >
         <argument
             android:name="task"
-            app:argType="com.example.vkr_todolist.data.source.local.model.Task"
+            app:argType="com.example.vkr_todolist.cache.room.model.Task"
             app:nullable="true" />
         <argument
             android:name="listName"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem"
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
             app:nullable="true" />
     </fragment>
     <fragment
@@ -84,7 +84,7 @@
         tools:layout="@layout/fragment_add_edit_list" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem"
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
             app:nullable="true"
             />
     </dialog>
@@ -95,7 +95,7 @@
         tools:layout="@layout/fragment_list" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
         <action
             android:id="@+id/action_listFragment_to_addEditListFragment"
             app:destination="@id/addEditListFragment" />
@@ -118,7 +118,7 @@
         tools:layout="@layout/fragment_list_of_tasks" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
     </fragment>
     <fragment
         android:id="@+id/listOfNotesFragment"
@@ -127,7 +127,7 @@
         tools:layout="@layout/fragment_list_of_notes" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
     </fragment>
     <action
         android:id="@+id/action_global_listFragment"
@@ -236,11 +236,11 @@
         tools:layout="@layout/fragment_add_edit_event" >
         <argument
             android:name="event"
-            app:argType="com.example.vkr_todolist.data.source.local.model.Event"
+            app:argType="com.example.vkr_todolist.cache.room.model.Event"
             app:nullable="true" />
         <argument
             android:name="listName"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem"
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
             app:nullable="true" />
     </dialog>
     <fragment
@@ -250,7 +250,7 @@
         tools:layout="@layout/fragment_list_of_events" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.data.source.local.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
     </fragment>
     <fragment
         android:id="@+id/pomodoroTimerFragment"

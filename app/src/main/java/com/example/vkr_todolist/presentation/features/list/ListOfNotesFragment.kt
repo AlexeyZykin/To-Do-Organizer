@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.presentation.features.note.NoteAdapter
-import com.example.vkr_todolist.data.source.local.model.ListItem
-import com.example.vkr_todolist.data.source.local.model.Note
+import com.example.vkr_todolist.cache.room.model.ListItem
+import com.example.vkr_todolist.cache.room.model.Note
 import com.example.vkr_todolist.databinding.FragmentListOfNotesBinding
-import com.example.vkr_todolist.presentation.features.dialogs.DeleteDialog
+import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
 import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 

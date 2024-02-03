@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Note
+import com.example.vkr_todolist.cache.room.model.Note
 import com.example.vkr_todolist.databinding.ItemNoteLinearBinding
-import com.example.vkr_todolist.utils.HtmlManager
+import com.example.vkr_todolist.presentation.utils.HtmlManager
 
 class NoteAdapter(private val listener: NoteListener, private val defPref: SharedPreferences): ListAdapter<Note, NoteAdapter.NoteViewHolder>(
     DiffCallback()

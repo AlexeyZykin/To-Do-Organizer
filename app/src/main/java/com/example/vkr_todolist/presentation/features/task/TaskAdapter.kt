@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Task
+import com.example.vkr_todolist.cache.room.model.Task
 import com.example.vkr_todolist.databinding.ItemTaskBinding
-import com.example.vkr_todolist.utils.DateTimeManager
+import com.example.vkr_todolist.presentation.utils.DateTimeManager
 
 class TaskAdapter(private val listener: TaskListener) : ListAdapter<Task, TaskAdapter.TaskViewHolder>(
     DiffCallback()

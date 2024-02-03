@@ -7,8 +7,8 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.PomodoroTimer
-import com.example.vkr_todolist.utils.Constants
+import com.example.vkr_todolist.cache.room.model.PomodoroTimer
+import com.example.vkr_todolist.presentation.utils.Constants
 
 class PomodoroReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

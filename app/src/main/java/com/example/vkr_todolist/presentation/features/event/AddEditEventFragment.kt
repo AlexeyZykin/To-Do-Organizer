@@ -19,12 +19,12 @@ import androidx.navigation.fragment.navArgs
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.NavGraphDirections
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Event
+import com.example.vkr_todolist.cache.room.model.Event
 import com.example.vkr_todolist.databinding.FragmentAddEditEventBinding
 import com.example.vkr_todolist.presentation.main.MainViewModel
-import com.example.vkr_todolist.utils.Constants
-import com.example.vkr_todolist.utils.DateTimeManager
-import com.example.vkr_todolist.utils.NotificationHelper
+import com.example.vkr_todolist.presentation.utils.Constants
+import com.example.vkr_todolist.presentation.utils.DateTimeManager
+import com.example.vkr_todolist.presentation.utils.NotificationHelper
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -260,21 +260,21 @@ class AddEditEventFragment : BottomSheetDialogFragment() {
             when (menuItem.itemId) {
                 R.id.rmHalfHourBefore -> {
                     chipReminder.text=menuItem.title
-                    eventInfo.reminder=DateTimeManager.getHalfHourBeforeDate(eventInfo.date!!)
+                    eventInfo.reminder= DateTimeManager.getHalfHourBeforeDate(eventInfo.date!!)
                     Log.d("TAG", "HalfHour ${eventInfo.reminder}")
                     chipReminder.isCloseIconVisible = true
                     true
                 }
                 R.id.rmHourBefore -> {
                     chipReminder.text=menuItem.title
-                    eventInfo.reminder=DateTimeManager.getHourBeforeDate(eventInfo.date!!)
+                    eventInfo.reminder= DateTimeManager.getHourBeforeDate(eventInfo.date!!)
                     Log.d("TAG", "Hour ${eventInfo.reminder}")
                     chipReminder.isCloseIconVisible = true
                     true
                 }
                 R.id.rmDayBefore -> {
                     chipReminder.text=menuItem.title
-                    eventInfo.reminder=DateTimeManager.getDayBeforeDate(eventInfo.date!!)
+                    eventInfo.reminder= DateTimeManager.getDayBeforeDate(eventInfo.date!!)
                     Log.d("TAG", "DayHour ${eventInfo.reminder}")
                     chipReminder.isCloseIconVisible = true
                     true

@@ -21,16 +21,16 @@ import com.example.vkr_todolist.R
 import com.example.vkr_todolist.presentation.features.event.EventAdapter
 import com.example.vkr_todolist.presentation.features.note.NoteAdapter
 import com.example.vkr_todolist.presentation.features.task.TaskAdapter
-import com.example.vkr_todolist.data.source.local.model.Event
-import com.example.vkr_todolist.data.source.local.model.Note
-import com.example.vkr_todolist.data.source.local.model.Task
+import com.example.vkr_todolist.cache.room.model.Event
+import com.example.vkr_todolist.cache.room.model.Note
+import com.example.vkr_todolist.cache.room.model.Task
 import com.example.vkr_todolist.databinding.FragmentSearchBinding
-import com.example.vkr_todolist.presentation.features.dialogs.DeleteDialog
+import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
 import com.example.vkr_todolist.presentation.features.event.EventFragment
 import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.example.vkr_todolist.presentation.features.note.NoteFragment
 import com.example.vkr_todolist.presentation.features.task.TaskFragment
-import com.example.vkr_todolist.utils.HideKeyboard
+import com.example.vkr_todolist.presentation.utils.HideKeyboard
 
 
 class SearchFragment : Fragment(), TaskAdapter.TaskListener, NoteAdapter.NoteListener, EventAdapter.EventListener {

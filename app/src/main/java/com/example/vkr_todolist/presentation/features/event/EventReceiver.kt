@@ -8,7 +8,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.presentation.main.MainActivity
-import com.example.vkr_todolist.utils.Constants
+import com.example.vkr_todolist.presentation.utils.Constants
 
 class EventReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

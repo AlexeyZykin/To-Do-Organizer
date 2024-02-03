@@ -13,8 +13,8 @@ import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.databinding.FragmentProductivityBinding
 import com.example.vkr_todolist.presentation.main.MainViewModel
-import com.example.vkr_todolist.utils.Constants
-import com.example.vkr_todolist.utils.DateTimeManager
+import com.example.vkr_todolist.presentation.utils.Constants
+import com.example.vkr_todolist.presentation.utils.DateTimeManager
 import kotlin.math.roundToInt
 
 

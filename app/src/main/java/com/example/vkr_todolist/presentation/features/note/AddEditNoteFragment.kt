@@ -27,11 +27,11 @@ import androidx.preference.PreferenceManager
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.NavGraphDirections
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Note
+import com.example.vkr_todolist.cache.room.model.Note
 import com.example.vkr_todolist.databinding.FragmentAddEditNoteBinding
 import com.example.vkr_todolist.presentation.main.MainViewModel
-import com.example.vkr_todolist.utils.HtmlManager
-import com.example.vkr_todolist.utils.PermissionsUtil
+import com.example.vkr_todolist.presentation.utils.HtmlManager
+import com.example.vkr_todolist.presentation.utils.PermissionsUtil
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat

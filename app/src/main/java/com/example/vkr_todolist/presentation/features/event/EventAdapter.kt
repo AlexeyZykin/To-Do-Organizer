@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Event
+import com.example.vkr_todolist.cache.room.model.Event
 import com.example.vkr_todolist.databinding.ItemEventsBinding
-import com.example.vkr_todolist.utils.DateTimeManager
+import com.example.vkr_todolist.presentation.utils.DateTimeManager
 
 
 class EventAdapter(private val listener: EventListener, private val context: Context): ListAdapter<Event, EventAdapter.EventViewHolder>(

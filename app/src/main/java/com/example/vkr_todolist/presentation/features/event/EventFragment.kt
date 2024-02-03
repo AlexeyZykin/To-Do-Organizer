@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Event
+import com.example.vkr_todolist.cache.room.model.Event
 import com.example.vkr_todolist.databinding.FragmentEventBinding
-import com.example.vkr_todolist.presentation.features.dialogs.DeleteDialog
+import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
 import com.example.vkr_todolist.presentation.main.MainViewModel
-import com.example.vkr_todolist.utils.DateTimeManager
+import com.example.vkr_todolist.presentation.utils.DateTimeManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 

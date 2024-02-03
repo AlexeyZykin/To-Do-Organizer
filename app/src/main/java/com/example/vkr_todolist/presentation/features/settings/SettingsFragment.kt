@@ -7,7 +7,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.utils.LanguageHelper
+import com.example.vkr_todolist.presentation.utils.LanguageHelper
 
 
 class SettingsFragment : PreferenceFragmentCompat() {

@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.Task
+import com.example.vkr_todolist.cache.room.model.Task
 import com.example.vkr_todolist.databinding.FragmentTaskBinding
-import com.example.vkr_todolist.presentation.features.dialogs.DeleteDialog
+import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
 import com.example.vkr_todolist.presentation.main.MainViewModel
-import com.example.vkr_todolist.utils.Constants
+import com.example.vkr_todolist.presentation.utils.Constants
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 

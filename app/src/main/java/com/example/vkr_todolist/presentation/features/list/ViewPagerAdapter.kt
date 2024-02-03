@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.vkr_todolist.data.source.local.model.ListItem
+import com.example.vkr_todolist.cache.room.model.ListItem
 
 class ViewPagerAdapter(fa: FragmentActivity, private val listItem: ListItem): FragmentStateAdapter(fa) {
     val fragmentsViewPager = listOf(ListOfTasksFragment(), ListOfNotesFragment(), ListOfEventsFragment())

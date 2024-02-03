@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.data.source.local.model.ListItem
+import com.example.vkr_todolist.cache.room.model.ListItem
 import com.example.vkr_todolist.databinding.FragmentAddEditListBinding
 import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
