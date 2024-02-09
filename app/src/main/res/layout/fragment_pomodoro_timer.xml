@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
-    tools:context=".ui.pomodoroTimer.PomodoroTimerFragment">
+    tools:context=".presentation.features.pomodoroTimer.PomodoroTimerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
