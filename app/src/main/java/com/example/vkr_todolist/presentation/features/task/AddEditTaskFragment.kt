@@ -1,5 +1,6 @@
 package com.example.vkr_todolist.presentation.features.task
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -10,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.format.DateFormat.is24HourFormat
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -20,16 +20,14 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.NavGraphDirections
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Task
 import com.example.vkr_todolist.databinding.FragmentAddEditTaskBinding
-import com.example.vkr_todolist.presentation.main.MainViewModel
+import com.example.vkr_todolist.presentation.model.ListUi
+import com.example.vkr_todolist.presentation.model.TaskUi
 import com.example.vkr_todolist.presentation.utils.Constants
 import com.example.vkr_todolist.presentation.utils.DateTimeManager
 import com.example.vkr_todolist.presentation.utils.NotificationHelper
@@ -40,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
@@ -47,22 +46,29 @@ class AddEditTaskFragment : Fragment() {
     private lateinit var binding: FragmentAddEditTaskBinding
     private lateinit var popupMenu: PopupMenu
     private val args: AddEditTaskFragmentArgs by navArgs()
-    private val permissionLauncher = PermissionsUtil.registerForPermissionsResult(this@AddEditTaskFragment)
-
-    private var taskInfo =
-        Task(null, "","",false, null,
-            null, DateTimeManager.getCurrentDate(),false, null,null)
+    private val permissionLauncher =
+        PermissionsUtil.registerForPermissionsResult(this@AddEditTaskFragment)
+    private val listUi = ListUi(null, "")
+    private val taskUi = TaskUi(
+        null,
+        "",
+        null,
+        false,
+        listUi,
+        null,
+        Calendar.getInstance().time,
+        false,
+        null,
+        null
+    )
     private var isCategorySelected = false
+    private val viewModel by viewModel<AddEditTaskViewModel>()
 
-
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddEditTaskBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,48 +76,52 @@ class AddEditTaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.fabCreateTask.setOnClickListener {
-            createNewTask()
-        }
-        binding.chipSelectList.setOnClickListener {
-            initFilterList()
-        }
+        args.taskId?.let { viewModel.getTask(it.first()) }
+        args.listId?.let { viewModel.getList(it.first()) }
+        viewModel.getAllLists()
+        subscribeObservers()
+        NotificationHelper.createNotificationChannel(requireContext())
+        binding.fabCreateTask.setOnClickListener { createNewTask() }
+        binding.chipSelectList.setOnClickListener { initFilterList() }
         binding.chipDatePicker.setOnClickListener { showDatePicker() }
         binding.chipReminder.setOnClickListener { setAlarm() }
-        binding.chipDatePicker.setOnCloseIconClickListener {
-            taskInfo.date = null
-            binding.chipDatePicker.setText(R.string.due_date)
-            binding.chipDatePicker.isCloseIconVisible=false
-        }
-        binding.chipReminder.setOnCloseIconClickListener {
-            taskInfo.reminder = null
-            binding.chipReminder.setText(R.string.reminder)
-            binding.chipReminder.isCloseIconVisible=false
-        }
-        binding.chipImage.setOnClickListener {
-            pickImageFromGallery()
-        }
-        binding.chipImage.setOnCloseIconClickListener {
-            binding.imgCardView.visibility = View.GONE
-            taskInfo.imagePath = null
-            binding.imgPick.setImageBitmap(null)
-            binding.chipImage.isCloseIconVisible=false
-        }
-        NotificationHelper.createNotificationChannel(requireContext())
-        initUpdate()
+        binding.chipDatePicker.setOnCloseIconClickListener { closeIconDatePicker() }
+        binding.chipReminder.setOnCloseIconClickListener { closeIconReminder() }
+        binding.chipImage.setOnClickListener { pickImageFromGallery() }
+        binding.chipImage.setOnCloseIconClickListener { closeIconImagePicker() }
     }
 
+    private fun closeIconDatePicker() {
+        taskUi.date = null
+        binding.chipDatePicker.setText(R.string.due_date)
+        binding.chipDatePicker.isCloseIconVisible = false
+    }
 
-    private fun initFilterList()= with(binding){
-        popupMenu = PopupMenu(context?.applicationContext, chipSelectList)
-        viewModel.allListItem.value?.forEach{listItem->
-            popupMenu.menu.add(listItem.listTitle)
-                .setIcon(R.drawable.ic_notes)
-                .setOnMenuItemClickListener {menuItem->
-                chipSelectList.text=menuItem.title
-                taskInfo.listId = listItem.listId
-                isCategorySelected = true
-                true
+    private fun closeIconReminder() {
+        taskUi.reminder = null
+        binding.chipReminder.setText(R.string.reminder)
+        binding.chipReminder.isCloseIconVisible = false
+    }
+
+    private fun closeIconImagePicker() {
+        taskUi.imagePath = null
+        binding.imgCardView.visibility = View.GONE
+        binding.imgPick.setImageBitmap(null)
+        binding.chipImage.isCloseIconVisible = false
+    }
+
+    private fun initFilterList() {
+        popupMenu = PopupMenu(context?.applicationContext, binding.chipSelectList)
+        viewModel.lists.observe(viewLifecycleOwner) {
+            it?.forEach { list ->
+                popupMenu.menu.add(list.title)
+                    .setIcon(R.drawable.ic_notes)
+                    .setOnMenuItemClickListener { menuItem ->
+                        taskUi.list = list
+                        binding.chipSelectList.text = menuItem.title
+                        isCategorySelected = true
+                        true
+                    }
             }
         }
         popupMenu.menu.add(Menu.NONE, R.id.addEditListFragment, Menu.NONE, R.string.add_new_list)
@@ -125,124 +135,113 @@ class AddEditTaskFragment : Fragment() {
     }
 
 
-    private fun createNewTask()=with(binding){
-        if(edTaskTitle.text.isNullOrBlank())
-            Snackbar.make(binding.root, R.string.snackbar_addTitle, Snackbar.LENGTH_SHORT).setAction("Action", null).show()
-        else if(taskInfo.listId == null)
-            Snackbar.make(binding.root, R.string.snackbar_selectList, Snackbar.LENGTH_SHORT).setAction("Action", null).show()
-        else {
-            if(args.task == null) {
-                val tempTask = Task(
-                    null,
-                    binding.edTaskTitle.text.toString(),
-                    binding.edTaskDesc.text.toString(),
-                    false,
-                    taskInfo.listId,
-                    taskInfo.date,
-                    taskInfo.createdDate,
-                    taskInfo.isImportant,
-                    taskInfo.reminder,
-                    taskInfo.imagePath
-                )
+    private fun createNewTask() {
+        when {
+            binding.edTaskTitle.text.isNullOrBlank() ->
+                Snackbar.make(binding.root, R.string.snackbar_addTitle, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show()
 
-                lifecycleScope.launch {
-                    val taskId = viewModel.insertTask(tempTask).await()
-                    Log.d("TAG", "taskId: ${taskId}")
-                    // Устанавливаем уведомление
-                    if (tempTask.reminder != null)
-                        setNotification(requireContext(), taskId.toInt(), tempTask)
-                    findNavController().popBackStack()
+            binding.chipSelectList.text == getString(R.string.select_list) ->
+                Snackbar.make(binding.root, R.string.snackbar_selectList, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show()
+
+            else -> {
+                if (args.taskId == null) {
+                    taskUi.apply {
+                        title = binding.edTaskTitle.text.toString()
+                        description = binding.edTaskDesc.text.toString()
+                        checked = false
+                        createdDate = DateTimeManager.getCurrentDate()
+                    }
+                    lifecycleScope.launch {
+                        val taskId = viewModel.addTask(taskUi).await()
+                        if (taskUi.reminder != null)
+                            setNotification(requireContext(), taskId.toInt(), taskUi)
+                    }
                 }
-            }
-            else{
-                updateTask()
+                else updateTask()
                 findNavController().popBackStack()
             }
         }
-
     }
 
 
-    private fun initUpdate() = with (binding){
-        if(args.task!=null){
-            edTaskTitle.setText(args.task!!.taskTitle)
-            edTaskDesc.setText(args.task?.taskDescription!!)
-
-            taskInfo.date = args.task?.date
-            taskInfo.createdDate = args.task?.createdDate
-            taskInfo.reminder = args.task?.reminder
-            if(taskInfo.date != null) {
-                chipDatePicker.text = DateTimeManager.convertDateToString(taskInfo.date!!)
-                chipDatePicker.isCloseIconVisible = true
+    private fun subscribeObservers() {
+        viewModel.listItem.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.chipSelectList.text = it.title
+                taskUi.list = it
             }
-            if(taskInfo.reminder != null) {
-                chipReminder.text = DateTimeManager.convertTimeToString(taskInfo.reminder!!)
-                chipReminder.isCloseIconVisible = true
-            }
-
-            taskInfo.isImportant=args.task?.isImportant!!
-
-            if(args.task!!.imagePath != null){
-                chipImage.isCloseIconVisible = true
-                taskInfo.imagePath = args.task!!.imagePath
-                imgPick.setImageBitmap(BitmapFactory.decodeFile(taskInfo.imagePath))
-            }
-
-            taskInfo.listId=args.task?.listId!!
-            isCategorySelected=true
-            viewModel.getListById(taskInfo.listId!!).observe(viewLifecycleOwner){
-                it.forEach {
-                    chipSelectList.text = it.listTitle
+        }
+        viewModel.task.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.edTaskTitle.setText(it.title)
+                binding.edTaskDesc.setText(it.description)
+                it.date?.let { date ->
+                    binding.chipDatePicker.text = DateTimeManager.convertDateToString(date)
+                    binding.chipDatePicker.isCloseIconVisible = true
+                }
+                it.reminder?.let { reminder ->
+                    binding.chipReminder.text = DateTimeManager.convertTimeToString(reminder)
+                    binding.chipReminder.isCloseIconVisible = true
+                }
+                binding.chipSelectList.text = it.list.title
+                isCategorySelected = true
+                it.imagePath?.let { imagePath ->
+                    binding.imgPick.setImageBitmap(BitmapFactory.decodeFile(imagePath))
+                    binding.chipImage.isCloseIconVisible = true
+                }
+                taskUi.apply {
+                    id = it.id
+                    title = it.title
+                    description = it.description
+                    checked = it.checked
+                    list = it.list
+                    date = it.date
+                    createdDate = it.createdDate
+                    isImportant = it.isImportant
+                    reminder = it.reminder
+                    imagePath = it.imagePath
                 }
             }
         }
-
-        if(args.listName!= null){
-            chipSelectList.text = args.listName!!.listTitle
-            taskInfo.listId = args.listName!!.listId
-        }
     }
 
 
-    private fun updateTask() = with(binding){
-        val tempTask = args.task?.copy(
-            taskTitle = edTaskTitle.text.toString(),
-            taskDescription = edTaskDesc.text.toString(),
-            listId = taskInfo.listId,
-            date = taskInfo.date,
-            reminder = taskInfo.reminder,
-            isImportant = taskInfo.isImportant,
-            imagePath = taskInfo.imagePath
-        )
+    private fun updateTask() {
         lifecycleScope.launch {
-            viewModel.updateTask(tempTask!!)
-            if (tempTask.reminder != null)
-                setNotification(requireContext(), tempTask.taskId!!, tempTask)
+            taskUi.apply {
+                title = binding.edTaskTitle.text.toString()
+                description = binding.edTaskDesc.text.toString()
+            }
+            viewModel.updateTask(taskUi)
+            if (taskUi.reminder != null)
+                taskUi.id?.let { setNotification(requireContext(), it, taskUi) }
             else
-                removeAlarm(tempTask.taskId!!, tempTask)
+                taskUi.id?.let { removeAlarm(it, taskUi) }
         }
     }
 
 
-    private fun showDatePicker(){
+    private fun showDatePicker() {
         val datePicker = MaterialDatePicker.Builder.datePicker().build()
         datePicker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = it
             calendar.set(Calendar.HOUR_OF_DAY, 0)
             calendar.set(Calendar.MINUTE, 0)
-            taskInfo.date = calendar.time
-            binding.chipDatePicker.text = DateTimeManager.convertDateToString(taskInfo.date!!)
+            taskUi.date = calendar.time
+            binding.chipDatePicker.text = DateTimeManager.convertDateToString(taskUi.date!!)
             binding.chipDatePicker.isCloseIconVisible = true
         }
-        datePicker.show(childFragmentManager,"TAG")
+        datePicker.show(childFragmentManager, "TAG")
     }
 
 
-    private fun setAlarm(){
+    private fun setAlarm() {
         val datePicker = MaterialDatePicker.Builder.datePicker().build()
         val isSystem24Hour = is24HourFormat(requireContext())
-        val clockFormat = if(isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+        val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(clockFormat)
             .setHour(0)
@@ -255,31 +254,33 @@ class AddEditTaskFragment : Fragment() {
             calendar.timeInMillis = it
             calendar.set(Calendar.HOUR_OF_DAY, 0)
             calendar.set(Calendar.MINUTE, 0)
-            taskInfo.reminder = calendar.time
-            binding.chipReminder.text = DateTimeManager.convertTimeToString(taskInfo.reminder!!)
+            taskUi.reminder = calendar.time
+            binding.chipReminder.text =
+                DateTimeManager.convertTimeToString(taskUi.reminder!!)
             timePicker.show(childFragmentManager, "TAG")
         }
 
         timePicker.addOnPositiveButtonClickListener {
             val cal = Calendar.getInstance()
-            cal.time=taskInfo.reminder!!
+            cal.time = taskUi.reminder!!
             cal.set(Calendar.HOUR_OF_DAY, timePicker.hour)
             cal.set(Calendar.MINUTE, timePicker.minute)
-            taskInfo.reminder = cal.time
-            binding.chipReminder.text = DateTimeManager.convertTimeToString(taskInfo.reminder!!)
+            taskUi.reminder = cal.time
+            binding.chipReminder.text =
+                DateTimeManager.convertTimeToString(taskUi.reminder!!)
             binding.chipReminder.isCloseIconVisible = true
         }
-        datePicker.show(childFragmentManager,"TAG")
+        datePicker.show(childFragmentManager, "TAG")
     }
 
 
-    fun setNotification(context: Context, taskId: Int, task: Task) {
-        Log.d("TAG", "taskId: ${taskId}")
+    @SuppressLint("ScheduleExactAlarm")
+    fun setNotification(context: Context, taskId: Int, taskUi: TaskUi) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, TaskReceiver::class.java).apply {
             putExtra(Constants.TASK_ID, taskId)
-            putExtra(Constants.TASK_TITLE, task.taskTitle)
-            putExtra(Constants.TASK_DESCRIPTION, task.taskDescription)
+            putExtra(Constants.TASK_TITLE, taskUi.title)
+            putExtra(Constants.TASK_DESCRIPTION, taskUi.description)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -290,7 +291,7 @@ class AddEditTaskFragment : Fragment() {
         )
 
         val calendar = Calendar.getInstance().apply {
-            time = task.reminder!!
+            time = taskUi.reminder!!
         }
 
 // Устанавливаем время уведомления
@@ -302,23 +303,27 @@ class AddEditTaskFragment : Fragment() {
     }
 
 
-    private fun removeAlarm(taskId: Int, task: Task){
-        Log.d("TAG", "removeAlarm")
+    private fun removeAlarm(taskId: Int, taskUi: TaskUi) {
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, TaskReceiver::class.java).apply {
             putExtra(Constants.TASK_ID, taskId)
-            putExtra(Constants.TASK_TITLE, task.taskTitle)
-            putExtra(Constants.TASK_DESCRIPTION, task.taskDescription)
+            putExtra(Constants.TASK_TITLE, taskUi.title)
+            putExtra(Constants.TASK_DESCRIPTION, taskUi.description)
         }
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), taskId, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            taskId,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         alarmManager.cancel(pendingIntent)
     }
 
 
-    private fun pickImageFromGallery(){
+    private fun pickImageFromGallery() {
         if (PermissionsUtil.hasGalleryPermission(this@AddEditTaskFragment)) {
-            val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            if (intent.resolveActivity(requireActivity().packageManager) != null){
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
                 startForProfileImageResult.launch(intent)
             }
         } else {
@@ -331,11 +336,11 @@ class AddEditTaskFragment : Fragment() {
     }
 
     private fun getPathFromUri(contentUri: Uri): String? {
-        var filePath:String? = null
-        val cursor = requireActivity().contentResolver.query(contentUri,null,null,null,null)
-        if (cursor == null){
+        var filePath: String? = null
+        val cursor = requireActivity().contentResolver.query(contentUri, null, null, null, null)
+        if (cursor == null) {
             filePath = contentUri.path
-        }else{
+        } else {
             cursor.moveToFirst()
             val index = cursor.getColumnIndex("_data")
             filePath = cursor.getString(index)
@@ -356,19 +361,14 @@ class AddEditTaskFragment : Fragment() {
 
                 // mProfileUri = fileUri
                 binding.imgPick.setImageURI(fileUri)
-                taskInfo.imagePath = getPathFromUri(fileUri)!!
+                taskUi.imagePath = getPathFromUri(fileUri)!!
                 binding.chipImage.isCloseIconVisible = true
                 binding.imgCardView.visibility = View.VISIBLE
             } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 Toast.makeText(requireContext(), "Task Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = AddEditTaskFragment()
-    }
 }

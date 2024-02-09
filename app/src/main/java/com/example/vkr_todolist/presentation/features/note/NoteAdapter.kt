@@ -8,14 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Note
+import com.example.vkr_todolist.cache.room.model.NoteCache
 import com.example.vkr_todolist.databinding.ItemNoteLinearBinding
+import com.example.vkr_todolist.presentation.model.NoteUi
 import com.example.vkr_todolist.presentation.utils.HtmlManager
 
-class NoteAdapter(private val listener: NoteListener, private val defPref: SharedPreferences): ListAdapter<Note, NoteAdapter.NoteViewHolder>(
-    DiffCallback()
-) {
-
+class NoteAdapter(private val listener: NoteListener, private val defPref: SharedPreferences) :
+    ListAdapter<NoteUi, NoteAdapter.NoteViewHolder>(
+        DiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder.create(parent)
@@ -25,51 +26,51 @@ class NoteAdapter(private val listener: NoteListener, private val defPref: Share
         holder.bind(getItem(position), listener, defPref)
     }
 
-    class NoteViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ItemNoteLinearBinding.bind(view)
-        fun bind(note: Note, listener: NoteListener, defPref: SharedPreferences) = with(binding) {
-            tvNoteTitle.text = note.noteTitle
-            tvNoteTitle.maxLines = 2
-            tvNoteTitle.ellipsize = TextUtils.TruncateAt.END
+        fun bind(noteUi: NoteUi, listener: NoteListener, defPref: SharedPreferences) =
+            with(binding) {
+                tvNoteTitle.text = noteUi.title
+                tvNoteTitle.maxLines = 2
+                tvNoteTitle.ellipsize = TextUtils.TruncateAt.END
 
-            tvNoteDescription.text = HtmlManager.getFromHtml(note.noteDescription!!).trim()
-            tvNoteDescription.maxLines = 5
-            tvNoteDescription.ellipsize = TextUtils.TruncateAt.END
+                tvNoteDescription.text = noteUi.description?.let { HtmlManager.getFromHtml(it).trim() }
+                tvNoteDescription.maxLines = 5
+                tvNoteDescription.ellipsize = TextUtils.TruncateAt.END
 
-            tvNoteTime.text = note.time
+                tvNoteTime.text = noteUi.time
 
-            initImage(note, defPref)
+                initImage(noteUi, defPref)
 
-            noteLinear.setOnClickListener {
-                listener.onCLickItem(note, EDIT)
-           }
+                noteLinear.setOnClickListener {
+                    listener.onCLickItem(noteUi, EDIT)
+                }
 
-            root.setOnLongClickListener {
-                listener.onCLickItem(note, DELETE)
-                true
-            }
-        }
-
-        private fun initImage(note: Note, defPref: SharedPreferences)=with(binding){
-            if(defPref.getString("note_style_key", "Linear") == "Linear"){
-                if (note.imagePath != null){
-                    centralDivider.visibility = View.VISIBLE
-                    imAttachment.visibility=View.VISIBLE
-                    imgNote.setImageBitmap(BitmapFactory.decodeFile(note.imagePath))
-                    imgNote.visibility = View.VISIBLE
-                }else{
-                    centralDivider.visibility = View.GONE
-                    imAttachment.visibility=View.GONE
-                    imgNote.visibility = View.GONE
+                root.setOnLongClickListener {
+                    listener.onCLickItem(noteUi, DELETE)
+                    true
                 }
             }
-            else {
+
+        private fun initImage(noteUi: NoteUi, defPref: SharedPreferences) = with(binding) {
+            if (defPref.getString("note_style_key", "Linear") == "Linear") {
+                if (noteUi.imagePath != null) {
+                    centralDivider.visibility = View.VISIBLE
+                    imAttachment.visibility = View.VISIBLE
+                    imgNote.setImageBitmap(BitmapFactory.decodeFile(noteUi.imagePath))
+                    imgNote.visibility = View.VISIBLE
+                } else {
+                    centralDivider.visibility = View.GONE
+                    imAttachment.visibility = View.GONE
+                    imgNote.visibility = View.GONE
+                }
+            } else {
                 centralDivider.visibility = View.GONE
                 imgNote.visibility = View.GONE
-                if (note.imagePath != null){
-                    imAttachment.visibility=View.VISIBLE
-                }else{
-                    imAttachment.visibility=View.GONE
+                if (noteUi.imagePath != null) {
+                    imAttachment.visibility = View.VISIBLE
+                } else {
+                    imAttachment.visibility = View.GONE
                 }
             }
         }
@@ -88,22 +89,22 @@ class NoteAdapter(private val listener: NoteListener, private val defPref: Share
         }
     }
 
-    class DiffCallback:DiffUtil.ItemCallback<Note>(){
-        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem.noteId == newItem.noteId
+    class DiffCallback : DiffUtil.ItemCallback<NoteUi>() {
+        override fun areItemsTheSame(oldItem: NoteUi, newItem: NoteUi): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem==newItem
+        override fun areContentsTheSame(oldItem: NoteUi, newItem: NoteUi): Boolean {
+            return oldItem == newItem
         }
     }
 
 
     interface NoteListener {
-        fun onCLickItem(note: Note, state: Int)
+        fun onCLickItem(noteUi: NoteUi, state: Int)
     }
 
-    companion object{
+    companion object {
         const val EDIT = 1
         const val DELETE = 7
     }

@@ -1,8 +1,9 @@
 package com.example.vkr_todolist.cache.room.dao
 
+import androidx.core.location.LocationRequestCompat.Quality
 import androidx.room.*
-import com.example.vkr_todolist.cache.room.model.Event
-import com.example.vkr_todolist.cache.room.model.Note
+import com.example.vkr_todolist.cache.room.constants.CacheConstants
+import com.example.vkr_todolist.cache.room.model.EventCache
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 
@@ -10,26 +11,29 @@ import java.util.*
 @Dao
 interface EventDao {
     @Query("SELECT * FROM event order by date ASC")
-    fun getAllEvents(): Flow<List<Event>>
+    fun getAllEvents(): Flow<List<EventCache>>
 
-    @Query("SELECT * FROM event WHERE listId = :listId")
-    fun getEventsByList(listId: Int): Flow<List<Event>>
+    @Query("SELECT * FROM ${CacheConstants.Event_TABLE_NAME} WHERE listId = :listId")
+    fun getEventsByList(listId: Int): Flow<List<EventCache>>
 
-    @Query("DELETE FROM event WHERE listId = :listId")
+    @Query("SELECT * FROM ${CacheConstants.Event_TABLE_NAME} WHERE id = :id")
+    suspend fun getEventById(id: Int): EventCache
+
+    @Query("DELETE FROM ${CacheConstants.Event_TABLE_NAME} WHERE listId = :listId")
     suspend fun deleteEventsByListId(listId: Int)
 
-    @Query("SELECT * FROM event WHERE eventTitle LIKE :query")
-    fun searchEvent(query: String): Flow<List<Event>>
+    @Query("SELECT * FROM ${CacheConstants.Event_TABLE_NAME} WHERE title LIKE :query")
+    fun searchEvent(query: String): Flow<List<EventCache>>
 
-    @Query("DELETE FROM event WHERE date < :currentDate")
+    @Query("DELETE FROM ${CacheConstants.Event_TABLE_NAME} WHERE date < :currentDate")
     suspend fun deleteEndedEvents(currentDate: Date)
 
-    @Delete
-    suspend fun deleteEvent(event: Event)
+    @Query("DELETE FROM ${CacheConstants.Event_TABLE_NAME} WHERE id = :id")
+    suspend fun deleteEvent(id: Int)
 
     @Insert
-    suspend fun insertEvent(event: Event): Long
+    suspend fun insertEvent(eventCache: EventCache): Long
 
     @Update
-    suspend fun updateEvent(event: Event)
+    suspend fun updateEvent(eventCache: EventCache)
 }

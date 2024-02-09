@@ -6,19 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.activityViewModels
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.cache.room.model.PomodoroTimer
 import com.example.vkr_todolist.databinding.FragmentPomodoroTimerBinding
-import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.example.vkr_todolist.presentation.utils.Constants
 import com.example.vkr_todolist.presentation.utils.NotificationHelper
 import java.util.*
@@ -28,10 +24,6 @@ class PomodoroTimerFragment : Fragment() {
     private lateinit var binding: FragmentPomodoroTimerBinding
     private var timerInfo = PomodoroTimer()
     private var timer: CountDownTimer? = null
-
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
-    }
 
 
     override fun onCreateView(
@@ -46,7 +38,8 @@ class PomodoroTimerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         NotificationHelper.createNotificationChannel(requireContext())
-
+        updateTimerUI()
+        init()
         binding.bPlayPauseTimer.setOnClickListener {
             if(!timerInfo.isTimerRunning){
                 val theme = requireContext().theme
@@ -65,13 +58,7 @@ class PomodoroTimerFragment : Fragment() {
                 pauseTimer()
             }
         }
-
-        binding.bStopTimer.setOnClickListener {
-            stopTimer()
-        }
-        observer()
-        updateTimerUI()
-        init()
+        binding.bStopTimer.setOnClickListener { stopTimer() }
     }
 
     private fun init(){
@@ -151,31 +138,14 @@ class PomodoroTimerFragment : Fragment() {
 
 
     private fun saveTimerState(){
-        viewModel.updateTimerState(timerInfo)
+        //viewModel.updateTimerState(timerInfo)
     }
-
-
-    private fun observer(){
-        viewModel.lastTimerState.observe(viewLifecycleOwner){
-            Log.d("TAG", "timeLeft: ${it}")
-            if(it != null){
-                Log.d("TAG", "timeLeft: ${it.timeLeftInMillis}")
-                timerInfo.currentTimerType = it.currentTimerType
-                timerInfo.isTimerRunning = it.isTimerRunning
-                timerInfo.isTimerPaused = it.isTimerPaused
-                updateTimerUI()
-            }
-        }
-    }
-
 
     private fun updateTimerUI() {
         if(binding.timerBar.max == (timerInfo.workTimeInMillis / 1000).toInt())
             binding.timerBar.progress = (timerInfo.workTimeInMillis / 1000).toInt() - (timerInfo.timeLeftInMillis / 1000).toInt()
         else
             binding.timerBar.progress = (timerInfo.breakTimeInMillis / 1000).toInt() - (timerInfo.timeLeftInMillis / 1000).toInt()
-
-        Log.d("TAG", "Progress: ${binding.timerBar.progress}")
 
         val minutes = (timerInfo.timeLeftInMillis / 1000) / 60
         val seconds = (timerInfo.timeLeftInMillis / 1000) % 60
@@ -210,11 +180,5 @@ class PomodoroTimerFragment : Fragment() {
 
         val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0, notificationBuilder.build())
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = PomodoroTimerFragment()
-
     }
 }

@@ -1,41 +1,32 @@
 package com.example.vkr_todolist.presentation.features.list
 
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.presentation.features.note.NoteAdapter
-import com.example.vkr_todolist.cache.room.model.ListItem
-import com.example.vkr_todolist.cache.room.model.Note
 import com.example.vkr_todolist.databinding.FragmentListOfNotesBinding
 import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
-import com.example.vkr_todolist.presentation.main.MainViewModel
+import com.example.vkr_todolist.presentation.features.note.NoteViewModel
+import com.example.vkr_todolist.presentation.model.NoteUi
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ListOfNotesFragment : Fragment(), NoteAdapter.NoteListener {
     private lateinit var binding: FragmentListOfNotesBinding
     private lateinit var adapter: NoteAdapter
     private lateinit var defPref: SharedPreferences
-    private val args: ListOfNotesFragmentArgs by navArgs()
-    private var listItem: ListItem? = null
-    private val viewModel: MainViewModel by activityViewModels{
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
-    }
-
+    private val viewModel by viewModel<NoteViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,42 +36,35 @@ class ListOfNotesFragment : Fragment(), NoteAdapter.NoteListener {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val listId = arguments?.getInt(LIST_NAME)
+        listId?.let { viewModel.getNotesByList(listId) }
+        subscribeObserver()
+        initRecyclerView()
+        initSwipe()
         binding.fabNewNote.setOnClickListener {
             val action =
-                ListFragmentDirections.actionListFragmentToAddEditNoteFragment(null, listItem)
+                ListFragmentDirections.actionListFragmentToAddEditNoteFragment(null,
+                    listId?.let { id -> intArrayOf(id) })
             findNavController().navigate(action)
         }
-        init()
-        initRecyclerView()
-        observer()
-        initSwipe()
     }
 
-    override fun onResume() {
-        super.onResume()
-//        (activity as MainActivity).supportActionBar?.title = ListFragment.labelName
-//        Log.d("TAG", "resume")
-    }
-
-
-    private fun init()=with(binding){
-                val value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getSerializable(LIST_NAME, ListItem::class.java)
-        } else {
-            arguments?.getSerializable(LIST_NAME) as? ListItem
+    private fun subscribeObserver() {
+        viewModel.notes.observe(viewLifecycleOwner) {
+            it?.let { adapter.submitList(it) }
+            binding.emptyViewNote.run {
+                visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+            }
         }
-        listItem=value
     }
 
-
-    private fun initSwipe(){
+    private fun initSwipe() {
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ){
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -92,11 +76,11 @@ class ListOfNotesFragment : Fragment(), NoteAdapter.NoteListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
                 val note = adapter.currentList[pos]
-                viewModel.deleteNote(note)
+                note.id?.let { viewModel.deleteNote(it) }
                 Snackbar.make(binding.root, R.string.snackbar_deleted, Snackbar.LENGTH_LONG)
                     .apply {
                         setAction(R.string.undo) {
-                            viewModel.insertNote(note)
+                            viewModel.addNote(note)
                         }
                         show()
                     }
@@ -108,57 +92,46 @@ class ListOfNotesFragment : Fragment(), NoteAdapter.NoteListener {
     }
 
 
-    private fun observer(){
-        viewModel.getAllNotesFromList(listItem?.listId!!).observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-            binding.emptyViewNote.run { visibility = if(it.isNullOrEmpty()) View.VISIBLE else View.GONE }
-        }
-    }
-
-
-    private fun initRecyclerView()=with(binding){
+    private fun initRecyclerView() = with(binding) {
         defPref = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-        rcViewNote.layoutManager= getLayoutManager()
+        rcViewNote.layoutManager = getLayoutManager()
         adapter = NoteAdapter(this@ListOfNotesFragment, defPref)
-        rcViewNote.adapter=adapter
+        rcViewNote.adapter = adapter
     }
 
-
-    private fun getLayoutManager(): RecyclerView.LayoutManager{
-        return if(defPref.getString("note_style_key", "Linear") == "Linear"){
+    private fun getLayoutManager(): RecyclerView.LayoutManager {
+        return if (defPref.getString("note_style_key", "Linear") == "Linear") {
             LinearLayoutManager(activity)
         } else {
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
     }
 
-
-    companion object {
-        const val LIST_NAME = "list_name"
-        @JvmStatic
-        fun newInstance() = ListOfNotesFragment()
-    }
-
-
-    private fun deleteNote(note: Note){
-        DeleteDialog.showDeleteNote(context as AppCompatActivity, object : DeleteDialog.Listener{
+    private fun deleteNote(noteUi: NoteUi) {
+        DeleteDialog.showDeleteNote(context as AppCompatActivity, object : DeleteDialog.Listener {
             override fun onClick() {
-                viewModel.deleteNote(note)
+                noteUi.id?.let { viewModel.deleteNote(it) }
             }
         })
     }
 
-
-    override fun onCLickItem(note: Note, state: Int) {
-        when(state){
+    override fun onCLickItem(noteUi: NoteUi, state: Int) {
+        when (state) {
             NoteAdapter.EDIT -> {
                 val action =
-                    ListFragmentDirections.actionListFragmentToAddEditNoteFragment(note, null)
+                    ListFragmentDirections.actionListFragmentToAddEditNoteFragment(noteUi.id?.let {
+                        intArrayOf(it)
+                    }, null)
                 findNavController().navigate(action)
             }
+
             NoteAdapter.DELETE -> {
-                deleteNote(note)
+                deleteNote(noteUi)
             }
         }
+    }
+
+    companion object {
+        const val LIST_NAME = "list_name"
     }
 }

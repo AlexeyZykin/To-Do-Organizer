@@ -11,16 +11,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Task
+import com.example.vkr_todolist.cache.room.model.TaskCache
 import com.example.vkr_todolist.databinding.ItemTaskBinding
+import com.example.vkr_todolist.presentation.model.TaskUi
 import com.example.vkr_todolist.presentation.utils.DateTimeManager
 
-class TaskAdapter(private val listener: TaskListener) : ListAdapter<Task, TaskAdapter.TaskViewHolder>(
-    DiffCallback()
-){
-
-
-
+class TaskAdapter(private val listener: TaskListener) :
+    ListAdapter<TaskUi, TaskAdapter.TaskViewHolder>(
+        DiffCallback()
+    ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         return TaskViewHolder.create(parent)
     }
@@ -29,91 +28,113 @@ class TaskAdapter(private val listener: TaskListener) : ListAdapter<Task, TaskAd
         holder.bind(getItem(position), listener)
     }
 
-    class TaskViewHolder(view: View): RecyclerView.ViewHolder(view){
+    class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ItemTaskBinding.bind(view)
 
-        fun bind(task: Task, listener: TaskListener) = with(binding){
-            tvTaskTitle.text = task.taskTitle
+        fun bind(taskUi: TaskUi, listener: TaskListener) = with(binding) {
+            tvTaskTitle.text = taskUi.title
             tvTaskTitle.maxLines = 2
             tvTaskTitle.ellipsize = TextUtils.TruncateAt.END
 
-            if (task.date!=null)
-                tvTaskDate.text = DateTimeManager.convertDateToString(task.date!!)
-            setColorDate(task)
-            tvTaskDate.visibility = infoVisibility(task, DATE)
-            imDecs.visibility = infoVisibility(task, DESC)
-            imNotification.visibility = infoVisibility(task, REMINDER)
-            imAttachment.visibility = infoVisibility(task, IMAGE)
+            taskUi.date?.let {
+                tvTaskDate.text = DateTimeManager.convertDateToString(taskUi.date!!)
+            }
+            setColorDate(taskUi)
+            tvTaskDate.visibility = infoVisibility(taskUi, DATE)
+            imDecs.visibility = infoVisibility(taskUi, DESC)
+            imNotification.visibility = infoVisibility(taskUi, REMINDER)
+            imAttachment.visibility = infoVisibility(taskUi, IMAGE)
 
             taskCardView.setOnClickListener {
-                listener.onCLickItem(task, EDIT)
+                listener.onCLickItem(taskUi, EDIT)
             }
 
-            chBox.isChecked=task.taskChecked
+            chBox.isChecked = taskUi.checked
             setPaintFlagAndColor(binding)
             chBox.setOnClickListener {
-                listener.onCLickItem(task.copy(taskChecked = chBox.isChecked), CHECK_BOX)
+                listener.onCLickItem(taskUi.copy(checked = chBox.isChecked), CHECK_BOX)
 
             }
 
-            val isStared = task.isImportant
+            val isStared = taskUi.isImportant
             setPaintStar(isStared)
             layoutImportant.setOnClickListener {
-                listener.onCLickItem(task.copy(isImportant = !isStared), STAR)
+                listener.onCLickItem(taskUi.copy(isImportant = !isStared), STAR)
             }
 
             root.setOnLongClickListener {
-                listener.onCLickItem(task, DELETE)
+                listener.onCLickItem(taskUi, DELETE)
                 true
             }
         }
 
-        private fun setColorDate(task: Task) = with(binding) {
-            if (task.date != null) {
-                if (DateTimeManager.isDatePassed(task.date!!)) {
-                    tvTaskDate.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
+        private fun setColorDate(taskUi: TaskUi) = with(binding) {
+            if (taskUi.date != null) {
+                if (DateTimeManager.isDatePassed(taskUi.date!!)) {
+                    tvTaskDate.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.red
+                        )
+                    )
                 } else {
-                    tvTaskDate.setTextColor(ContextCompat.getColor(binding.root.context, R.color.hint_text))
+                    tvTaskDate.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.hint_text
+                        )
+                    )
                 }
             }
         }
 
-        private fun infoVisibility(task: Task, state: Int): Int{
+        private fun infoVisibility(taskUi: TaskUi, state: Int): Int {
             return when (state) {
                 DESC -> {
-                    return if (task.taskDescription.isNullOrEmpty()) View.GONE
+                    return if (taskUi.description.isNullOrEmpty()) View.GONE
                     else View.VISIBLE
                 }
+
                 REMINDER -> {
-                    return if (task.reminder == null) View.GONE
+                    return if (taskUi.reminder == null) View.GONE
                     else View.VISIBLE
                 }
+
                 DATE -> {
-                    return if (task.date == null) View.GONE
+                    return if (taskUi.date == null) View.GONE
                     else View.VISIBLE
                 }
+
                 IMAGE -> {
-                    return if (task.imagePath == null) View.GONE
+                    return if (taskUi.imagePath == null) View.GONE
                     else View.VISIBLE
                 }
-                else -> {0}
+
+                else -> {
+                    0
+                }
             }
         }
 
-        private fun setPaintStar(state: Boolean){
+        private fun setPaintStar(state: Boolean) {
             binding.apply {
-                when(state){
-                    true ->  imStar.setImageResource(R.drawable.ic_star)
+                when (state) {
+                    true -> imStar.setImageResource(R.drawable.ic_star)
                     false -> imStar.setImageResource(R.drawable.ic_star_empty)
                 }
             }
         }
 
-        private fun setPaintFlagAndColor(binding: ItemTaskBinding){
+        private fun setPaintFlagAndColor(binding: ItemTaskBinding) {
             binding.apply {
-                if(chBox.isChecked){
+                if (chBox.isChecked) {
                     tvTaskTitle.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                    tvTaskTitle.setTextColor(ContextCompat.getColor(binding.root.context, R.color.hint_light))
+                    tvTaskTitle.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.hint_light
+                        )
+                    )
                 } else {
                     tvTaskTitle.paintFlags = Paint.ANTI_ALIAS_FLAG
                     val typedValue = TypedValue()
@@ -125,7 +146,7 @@ class TaskAdapter(private val listener: TaskListener) : ListAdapter<Task, TaskAd
 
         }
 
-        companion object{
+        companion object {
             fun create(parent: ViewGroup): TaskViewHolder {
                 return TaskViewHolder(
                     LayoutInflater.from(parent.context)
@@ -139,22 +160,22 @@ class TaskAdapter(private val listener: TaskListener) : ListAdapter<Task, TaskAd
     }
 
 
-    class DiffCallback: DiffUtil.ItemCallback<Task>(){
-        override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
-            return oldItem.taskId == newItem.taskId
+    class DiffCallback : DiffUtil.ItemCallback<TaskUi>() {
+        override fun areItemsTheSame(oldItem: TaskUi, newItem: TaskUi): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
-            return oldItem==newItem
+        override fun areContentsTheSame(oldItem: TaskUi, newItem: TaskUi): Boolean {
+            return oldItem == newItem
         }
     }
 
 
-    interface TaskListener{
-        fun onCLickItem(task: Task, state: Int)
+    interface TaskListener {
+        fun onCLickItem(taskUi: TaskUi, state: Int)
     }
 
-    companion object{
+    companion object {
         const val CHECK_BOX = 0
         const val EDIT = 1
         const val STAR = 2

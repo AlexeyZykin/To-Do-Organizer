@@ -1,75 +1,45 @@
 package com.example.vkr_todolist.presentation.features.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.databinding.FragmentListBinding
 import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
 import com.example.vkr_todolist.presentation.main.MainActivity
-import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.google.android.material.tabs.TabLayoutMediator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
     private lateinit var adapter: ViewPagerAdapter
     private val args: ListFragmentArgs by navArgs()
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
-    }
-    private var label: String = ""
-    private var isBottomSheetOpen: Boolean = false
+    private val viewModel by viewModel<ListViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if (savedInstanceState != null) {
-            label = savedInstanceState.getString("label", "")
-        }
-        adapter = ViewPagerAdapter(requireActivity(), args.listItem)
+        adapter = ViewPagerAdapter(requireActivity(), args.listId)
         binding = FragmentListBinding.inflate(inflater, container, false)
-        Log.d("TAG", "onCreateView")
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getListById(args.listId)
+        viewModel.listItem.observe(viewLifecycleOwner) {
+            (activity as MainActivity).supportActionBar?.title = it.title
+        }
         setupMenu()
         initViewPager()
-        initListFrag()
-        Log.d("TAG", "onViewCreated")
     }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("TAG", "onResume")
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("label", label)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            Log.d("TAG", "onViewStateRestored")
-            label = savedInstanceState.getString("label", "")
-            (activity as MainActivity).supportActionBar?.title = label
-        }
-    }
-
 
     private fun setupMenu(){
         (requireActivity() as MenuHost).addMenuProvider(object: MenuProvider {
@@ -92,12 +62,11 @@ class ListFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-
     private fun initViewPager()= with(binding){
         viewPager.adapter = adapter
         adapter.fragmentsViewPager.forEach {fragment ->
-            fragment.arguments =Bundle().apply {
-                putSerializable("LIST_NAME", args.listItem)
+            fragment.arguments = Bundle().apply {
+                putSerializable(LIST_NAME, args.listId)
             }
         }
         TabLayoutMediator(tabLayout,viewPager){tab,position->
@@ -118,35 +87,22 @@ class ListFragment : Fragment() {
         }.attach()
     }
 
-
     private fun updateListItem(){
-        val dialog = AddEditListFragment()
-        
-        val action = ListFragmentDirections.actionListFragmentToAddEditListFragment(args.listItem)
+        val action = ListFragmentDirections.actionListFragmentToAddEditListFragment(intArrayOf(args.listId))
         findNavController().navigate(action)
     }
-
 
     private fun deleteListItem(){
         DeleteDialog.showDialog(context as AppCompatActivity, object : DeleteDialog.Listener{
             override fun onClick() {
-                viewModel.deleteList(args.listItem.listId!!)
+                viewModel.deleteList(args.listId)
                 findNavController().popBackStack()
             }
         })
     }
 
-
-    private fun initListFrag() = with(binding){
-            label = args.listItem.listTitle
-            (activity as MainActivity).supportActionBar?.title = label
-    }
-
-
     companion object {
         const val LIST_NAME = "list_name"
-        @JvmStatic
-        fun newInstance() = ListFragment()
     }
 
 }

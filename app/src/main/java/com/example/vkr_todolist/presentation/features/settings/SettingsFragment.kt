@@ -21,13 +21,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<ListPreference>(getString(R.string.language_key))
     }
 
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preference, rootKey)
         setThemePreference()
         setLanguagePreference()
     }
-
 
     private fun setThemePreference(){
         themePreference?.onPreferenceChangeListener =
@@ -39,7 +37,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 true
             }
     }
-
 
     private fun setLanguagePreference() {
         val supportedLanguages = resources.getStringArray(R.array.app_language_array)
@@ -58,12 +55,5 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
                 true
                 }
-    }
-
-
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = SettingsFragment()
     }
 }

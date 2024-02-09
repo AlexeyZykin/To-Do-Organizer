@@ -2,29 +2,28 @@ package com.example.vkr_todolist.presentation.features.productivity
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.fragment.app.activityViewModels
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.databinding.FragmentProductivityBinding
-import com.example.vkr_todolist.presentation.main.MainViewModel
 import com.example.vkr_todolist.presentation.utils.Constants
 import com.example.vkr_todolist.presentation.utils.DateTimeManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
 
 class ProductivityFragment : Fragment() {
     private lateinit var binding: FragmentProductivityBinding
     private lateinit var popupMenu: PopupMenu
-    private val sharedPref by lazy { requireActivity().getSharedPreferences("TimeRange", Context.MODE_PRIVATE) }
-
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
+    private val viewModel by viewModel<ProductivityViewModel>()
+    private val sharedPref by lazy {
+        requireActivity().getSharedPreferences(
+            "TimeRange",
+            Context.MODE_PRIVATE
+        )
     }
 
     override fun onCreateView(
@@ -38,12 +37,9 @@ class ProductivityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.selectTimeRange.setOnClickListener {
-                initFilterList()
-        }
-        binding.selectTimeRange
         initSelectedFilter()
         observer()
+        binding.selectTimeRange.setOnClickListener { initFilterList() }
     }
 
 
@@ -59,6 +55,7 @@ class ProductivityFragment : Fragment() {
                     viewModel.setSelectedTimeRange(Constants.WEEK)
                     true
                 }
+
                 R.id.monthRange -> {
                     binding.nameMonth.visibility = View.VISIBLE
                     binding.nameMonth.text = DateTimeManager.getNameMonth()
@@ -67,6 +64,7 @@ class ProductivityFragment : Fragment() {
                     viewModel.setSelectedTimeRange(Constants.MONTH)
                     true
                 }
+
                 else -> true
             }
         }
@@ -78,15 +76,15 @@ class ProductivityFragment : Fragment() {
     }
 
 
-    private fun initSelectedFilter(){
+    private fun initSelectedFilter() {
         val selectedItem = sharedPref.getInt("selected_item", Constants.WEEK)
-        Log.d("TAG", "Selected item: $selectedItem")
-        when(selectedItem){
-            Constants.WEEK ->{
+        when (selectedItem) {
+            Constants.WEEK -> {
                 binding.nameMonth.visibility = View.INVISIBLE
                 binding.selectTimeRange.text = getString(R.string.week)
                 viewModel.setSelectedTimeRange(Constants.WEEK)
             }
+
             Constants.MONTH -> {
                 binding.nameMonth.visibility = View.VISIBLE
                 binding.nameMonth.text = DateTimeManager.getNameMonth()
@@ -96,15 +94,13 @@ class ProductivityFragment : Fragment() {
         }
     }
 
-
-    private fun observer(){
-        viewModel.getCreatedTasksCount().observe(viewLifecycleOwner){createdCount->
-            viewModel.getCompletedTasksCount().observe(viewLifecycleOwner){completedCount->
+    private fun observer() {
+        viewModel.createdTasksCount.observe(viewLifecycleOwner) { createdCount ->
+            viewModel.completedTasksCount.observe(viewLifecycleOwner) { completedCount ->
                 binding.countCreated.text = createdCount.toString()
                 binding.countCompleted.text = completedCount.toString()
-                val productivity = completedCount.toFloat()/createdCount * 100
-                Log.d("TAG", "Productivity: $productivity")
-                if(productivity.isNaN())
+                val productivity = completedCount.toFloat() / createdCount * 100
+                if (productivity.isNaN())
                     binding.productivityRate.text = 0.toString() + "%"
                 else {
                     val rounded = productivity.roundToInt()
@@ -113,12 +109,5 @@ class ProductivityFragment : Fragment() {
                 binding.progressBar.progress = productivity.toInt()
             }
         }
-    }
-
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = ProductivityFragment()
     }
 }

@@ -21,7 +21,6 @@ class ThemeProvider(private val context: Context) {
         } ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     }
 
-
     fun getTheme(selectedTheme: String): Int = when (selectedTheme) {
         context.getString(R.string.dark_theme_value) -> UiModeManager.MODE_NIGHT_YES
         context.getString(R.string.light_theme_value) -> UiModeManager.MODE_NIGHT_NO

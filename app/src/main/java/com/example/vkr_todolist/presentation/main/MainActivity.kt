@@ -3,7 +3,6 @@ package com.example.vkr_todolist.presentation.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -14,27 +13,26 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.NavGraphDirections
 import com.example.vkr_todolist.R
 import com.example.vkr_todolist.databinding.ActivityMainBinding
+import com.example.vkr_todolist.presentation.features.list.ListViewModel
 import com.google.android.material.navigation.NavigationView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navigationView: NavigationView
-    private val viewModel: MainViewModel by viewModels {
-        MainViewModel.MainViewModelFactory((applicationContext as App).database)
-    }
-
+    private val viewModel by viewModel<ListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel.getAllLists()
         initNavigation()
         actionBarSettings()
         visibilityBottomBar()
@@ -75,21 +73,21 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        viewModel.allListItem.observe(this) { items ->
+        viewModel.lists.observe(this) { items ->
             menu.removeGroup(R.id.group_lists)
-            // добавляем новые элементы меню
             items.forEach { item ->
                 val icon = ContextCompat.getDrawable(applicationContext, R.drawable.ic_list_item)
-                menu.add(R.id.group_lists, item.listId!!, Menu.NONE, item.listTitle)
-                    .setIcon(icon)
-                    .setCheckable(true)
-                    .setOnMenuItemClickListener { menuItem ->
-                        val action = NavGraphDirections.actionGlobalListFragment(item)
-                        navController.navigate(action)
-                        binding.drawerLayout.closeDrawers()
-                        true
-                    }
-                //viewModel.deleteListItem(item)
+                item.id?.let { itemId ->
+                    menu.add(R.id.group_lists, itemId, Menu.NONE, item.title)
+                        .setIcon(icon)
+                        .setCheckable(true)
+                        .setOnMenuItemClickListener { menuItem ->
+                            val action = NavGraphDirections.actionGlobalListFragment(itemId)
+                            navController.navigate(action)
+                            binding.drawerLayout.closeDrawers()
+                            true
+                        }
+                }
             }
             menu.add(R.id.group_lists, R.id.addEditListFragment, Menu.NONE, R.string.add_new_list)
                 .setIcon(R.drawable.ic_add)
@@ -145,5 +143,4 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val LIST_NAME = "list_name"
     }
-
 }

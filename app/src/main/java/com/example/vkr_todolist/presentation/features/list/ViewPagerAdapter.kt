@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.vkr_todolist.cache.room.model.ListItem
+import com.example.vkr_todolist.cache.room.model.ListCache
 
-class ViewPagerAdapter(fa: FragmentActivity, private val listItem: ListItem): FragmentStateAdapter(fa) {
+class ViewPagerAdapter(fa: FragmentActivity, private val listId: Int): FragmentStateAdapter(fa) {
     val fragmentsViewPager = listOf(ListOfTasksFragment(), ListOfNotesFragment(), ListOfEventsFragment())
 
     override fun getItemCount() = fragmentsViewPager.size
@@ -14,7 +14,7 @@ class ViewPagerAdapter(fa: FragmentActivity, private val listItem: ListItem): Fr
     override fun createFragment(position: Int): Fragment {
         val fragment = fragmentsViewPager[position]
         fragment.arguments = Bundle().apply{
-            putSerializable(LIST_NAME, listItem)
+            putSerializable(LIST_NAME, listId)
         }
         return fragment
     }

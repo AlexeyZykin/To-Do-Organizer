@@ -1,4 +1,9 @@
 package com.example.vkr_todolist.domain.usecase.event
 
-class DeleteEventUseCase {
+import com.example.vkr_todolist.domain.repository.EventRepository
+
+class DeleteEventUseCase(private val eventRepository: EventRepository) {
+    suspend fun invoke(id: Int){
+        eventRepository.deleteEvent(id)
+    }
 }

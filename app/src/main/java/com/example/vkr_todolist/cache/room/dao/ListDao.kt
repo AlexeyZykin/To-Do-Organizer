@@ -1,23 +1,23 @@
 package com.example.vkr_todolist.cache.room.dao
 
 import androidx.room.*
-import com.example.vkr_todolist.cache.room.model.ListItem
+import com.example.vkr_todolist.cache.room.model.ListCache
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ListDao {
     @Query("SELECT * FROM list")
-    fun getAllLists(): Flow<List<ListItem>>
+    fun getAllLists(): Flow<List<ListCache>>
 
     @Query("SELECT * FROM list WHERE listId = :listId")
-    fun getListById(listId: Int): Flow<List<ListItem>>
+    suspend fun getListById(listId: Int): ListCache
 
     @Query("DELETE FROM list WHERE listId = :listId")
     suspend fun deleteList(listId: Int)
 
     @Insert
-    suspend fun insertListItem(listItem: ListItem)
+    suspend fun insertListItem(listCache: ListCache)
 
     @Update
-    suspend fun updateListItem(listItem: ListItem)
+    suspend fun updateListItem(listCache: ListCache)
 }

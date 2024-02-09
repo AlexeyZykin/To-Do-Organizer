@@ -29,7 +29,6 @@ class TaskReceiver : BroadcastReceiver() {
         val pendingIntent: PendingIntent =
             getActivity(context, 0, tapResultIntent, FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE)
 
-        // Создаем уведомление
         val notificationBuilder =
             NotificationCompat.Builder(context, Constants.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher)
@@ -39,7 +38,6 @@ class TaskReceiver : BroadcastReceiver() {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
 
-        // Отображаем уведомление
         notificationManager.notify(taskId!!, notificationBuilder.build())
     }
 }

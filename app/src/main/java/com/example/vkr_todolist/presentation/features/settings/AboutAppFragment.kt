@@ -10,7 +10,6 @@ import com.example.vkr_todolist.R
 
 class AboutAppFragment : Fragment() {
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

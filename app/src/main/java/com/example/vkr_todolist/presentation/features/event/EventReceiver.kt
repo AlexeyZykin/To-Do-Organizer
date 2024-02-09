@@ -28,7 +28,6 @@ class EventReceiver: BroadcastReceiver() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-
         val notificationBuilder =
             NotificationCompat.Builder(context, Constants.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher)

@@ -9,39 +9,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Task
 import com.example.vkr_todolist.databinding.FragmentTaskBinding
 import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
-import com.example.vkr_todolist.presentation.main.MainViewModel
+import com.example.vkr_todolist.presentation.model.TaskUi
 import com.example.vkr_todolist.presentation.utils.Constants
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TaskFragment : Fragment(), TaskAdapter.TaskListener {
     private lateinit var binding: FragmentTaskBinding
     private lateinit var adapter: TaskAdapter
     private lateinit var popupMenu: PopupMenu
-
+    private val viewModel by viewModel<TaskViewModel>()
     private val sharedPref by lazy {
         requireActivity().getSharedPreferences(
             "MyPrefs",
             Context.MODE_PRIVATE
         )
-    }
-
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
     }
 
     override fun onCreateView(
@@ -52,21 +44,18 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+        initSwipe()
+        subscribeObserver()
+        setupMenu()
+        initSelectedFilter()
         binding.fabNewTask.setOnClickListener {
             val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(null, null)
             it.findNavController().navigate(action)
         }
-        binding.chipFilterTasks.setOnClickListener {
-            initFilterList()
-        }
-        initRecyclerView()
-        initSwipe()
-        observer()
-        setupMenu()
-        initSelectedFilter()
+        binding.chipFilterTasks.setOnClickListener { initFilterList() }
     }
 
     private fun setupMenu() {
@@ -88,13 +77,11 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-
-    private fun initRecyclerView() = with(binding) {
-        rcViewTask.layoutManager = LinearLayoutManager(activity)
+    private fun initRecyclerView() {
+        binding.rcViewTask.layoutManager = LinearLayoutManager(activity)
         adapter = TaskAdapter(this@TaskFragment)
-        rcViewTask.adapter = adapter
+        binding.rcViewTask.adapter = adapter
     }
-
 
     private fun initSwipe() {
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(
@@ -112,13 +99,11 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
                 val task = adapter.currentList[pos]
-                viewModel.deleteTask(task)
+                task.id?.let { viewModel.deleteTask(it) }
                 Snackbar.make(binding.root, R.string.snackbar_deleted, Snackbar.LENGTH_LONG)
                     .apply {
                         setAction(R.string.undo) {
-                            lifecycleScope.launch {
-                                viewModel.insertTask(task)
-                            }
+                            viewModel.addTask(task)
                         }
                         show()
                     }
@@ -141,30 +126,35 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
                     chipFilterTasks.text = getString(R.string.all_tasks)
                     true
                 }
+
                 R.id.todayTasks -> {
                     saveSelectedFilter(Constants.TASKS_TODAY)
                     viewModel.setSelectedFilter(Constants.TASKS_TODAY)
                     chipFilterTasks.text = getString(R.string.today_tasks)
                     true
                 }
+
                 R.id.tomorrowTasks -> {
                     saveSelectedFilter(Constants.TASKS_TOMORROW)
                     viewModel.setSelectedFilter(Constants.TASKS_TOMORROW)
                     chipFilterTasks.text = getString(R.string.tomorrow_tasks)
                     true
                 }
+
                 R.id.laterTasks -> {
                     saveSelectedFilter(Constants.TASKS_LATER)
                     viewModel.setSelectedFilter(Constants.TASKS_LATER)
                     chipFilterTasks.text = getString(R.string.later_tasks)
                     true
                 }
+
                 R.id.noDatesTasks -> {
                     saveSelectedFilter(Constants.TASKS_NO_DATES)
                     viewModel.setSelectedFilter(Constants.TASKS_NO_DATES)
                     chipFilterTasks.text = getString(R.string.no_dates_tasks)
                     true
                 }
+
                 else -> true
             }
         }
@@ -177,24 +167,27 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
 
     private fun initSelectedFilter() {
         val selectedItem = sharedPref.getInt("selected_item", Constants.TASKS_ALL)
-        Log.d("TAG", "Selected item: $selectedItem")
         when (selectedItem) {
             Constants.TASKS_ALL -> {
                 binding.chipFilterTasks.text = getString(R.string.all_tasks)
                 viewModel.setSelectedFilter(Constants.TASKS_ALL)
             }
+
             Constants.TASKS_TODAY -> {
                 binding.chipFilterTasks.text = getString(R.string.today_tasks)
                 viewModel.setSelectedFilter(Constants.TASKS_TODAY)
             }
+
             Constants.TASKS_TOMORROW -> {
                 binding.chipFilterTasks.text = getString(R.string.tomorrow_tasks)
                 viewModel.setSelectedFilter(Constants.TASKS_TOMORROW)
             }
+
             Constants.TASKS_LATER -> {
                 binding.chipFilterTasks.text = getString(R.string.later_tasks)
                 viewModel.setSelectedFilter(Constants.TASKS_LATER)
             }
+
             Constants.TASKS_NO_DATES -> {
                 binding.chipFilterTasks.text = getString(R.string.no_dates_tasks)
                 viewModel.setSelectedFilter(Constants.TASKS_NO_DATES)
@@ -202,10 +195,9 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
         }
     }
 
-    private fun observer() {
-        viewModel.getTasks().observe(viewLifecycleOwner) {
-            Log.d("TAG", "observer: $it")
-            adapter.submitList(it)
+    private fun subscribeObserver() {
+        viewModel.tasksFiltered.observe(viewLifecycleOwner) {
+            it?.let { adapter.submitList(it) }
             binding.viewStub.run {
                 visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
             }
@@ -213,30 +205,35 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
     }
 
 
-    private fun deleteTask(task: Task) {
+    private fun deleteTask(taskUi: TaskUi) {
         DeleteDialog.showDeleteTask(context as AppCompatActivity, object : DeleteDialog.Listener {
             override fun onClick() {
-                viewModel.deleteTask(task)
+                taskUi.id?.let { viewModel.deleteTask(it) }
             }
         })
     }
 
 
-    override fun onCLickItem(task: Task, state: Int) {
+    override fun onCLickItem(taskUi: TaskUi, state: Int) {
         when (state) {
             TaskAdapter.CHECK_BOX -> {
-                viewModel.updateTask(task)
+                viewModel.updateTask(taskUi)
             }
+
             TaskAdapter.EDIT -> {
                 val action =
-                    TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(task, null)
+                    TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(taskUi.id?.let {
+                        intArrayOf(it)
+                    }, null)
                 findNavController().navigate(action)
             }
+
             TaskAdapter.STAR -> {
-                viewModel.updateTask(task)
+                viewModel.updateTask(taskUi)
             }
+
             TaskAdapter.DELETE -> {
-                deleteTask(task)
+                deleteTask(taskUi)
             }
         }
     }
@@ -244,8 +241,5 @@ class TaskFragment : Fragment(), TaskAdapter.TaskListener {
 
     companion object {
         const val TASK = "task_type"
-
-        @JvmStatic
-        fun newInstance() = TaskFragment()
     }
 }

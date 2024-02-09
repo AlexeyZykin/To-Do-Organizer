@@ -6,59 +6,56 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Task
 import com.example.vkr_todolist.databinding.FragmentCompletedTasksBinding
 import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
-import com.example.vkr_todolist.presentation.main.MainViewModel
+import com.example.vkr_todolist.presentation.model.TaskUi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CompletedTasksFragment : Fragment(), TaskAdapter.TaskListener {
     private lateinit var binding: FragmentCompletedTasksBinding
     private lateinit var adapter: TaskAdapter
-
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
-    }
+    private val viewModel by viewModel<TaskViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCompletedTasksBinding.inflate(inflater,container, false)
+        binding = FragmentCompletedTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getCompletedTasks()
         initRecyclerView()
-        observer()
+        subscribeObserver()
         initSwipe()
         setupMenu()
     }
 
 
-    private fun setupMenu(){
-        (requireActivity() as MenuHost).addMenuProvider(object: MenuProvider {
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.completed_tasks_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when(menuItem.itemId){
-                    R.id.deleteAllCompTasks-> {
+                when (menuItem.itemId) {
+                    R.id.deleteAllCompTasks -> {
                         deleteCompletedTasks()
-                        return true }
+                        return true
+                    }
                 }
                 return false
             }
@@ -67,35 +64,38 @@ class CompletedTasksFragment : Fragment(), TaskAdapter.TaskListener {
     }
 
 
-    private fun deleteCompletedTasks(){
-        DeleteDialog.showCompTasksDialog(context as AppCompatActivity, object : DeleteDialog.Listener{
-            override fun onClick() {
-                viewModel.deleteCompletedTasks()
-            }
-        })
+    private fun deleteCompletedTasks() {
+        DeleteDialog.showCompTasksDialog(
+            context as AppCompatActivity,
+            object : DeleteDialog.Listener {
+                override fun onClick() {
+                    viewModel.deleteCompletedTasks()
+                }
+            })
     }
 
-
-    private fun observer(){
-        viewModel.completedTasks.observe(viewLifecycleOwner){
-            adapter.submitList(it)
-            binding.emptyCompTasks.run { visibility = if(it.isNullOrEmpty()) View.VISIBLE else View.GONE }
+    private fun subscribeObserver() {
+        viewModel.tasks.observe(viewLifecycleOwner) {
+            it?.let { adapter.submitList(it) }
+            binding.emptyCompTasks.run {
+                visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+            }
         }
     }
 
 
-    private fun initRecyclerView()=with(binding){
+    private fun initRecyclerView() = with(binding) {
         rcViewTask.layoutManager = LinearLayoutManager(activity)
         adapter = TaskAdapter(this@CompletedTasksFragment)
         rcViewTask.adapter = adapter
     }
 
 
-    private fun initSwipe(){
+    private fun initSwipe() {
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ){
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -107,13 +107,13 @@ class CompletedTasksFragment : Fragment(), TaskAdapter.TaskListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
                 val task = adapter.currentList[pos]
-                viewModel.deleteTask(task)
+                task.id?.let { viewModel.deleteTask(it) }
                 Snackbar.make(binding.root, R.string.snackbar_deleted, Snackbar.LENGTH_LONG)
                     .apply {
                         setAction(R.string.undo) {
                             //viewModel.insertTask(task)
                             lifecycleScope.launch {
-                                viewModel.insertTask(task)
+                                viewModel.addTask(task)
                             }
                         }
                         show()
@@ -126,41 +126,37 @@ class CompletedTasksFragment : Fragment(), TaskAdapter.TaskListener {
     }
 
 
-    private fun deleteTask(task: Task){
-        DeleteDialog.showDeleteTask(context as AppCompatActivity, object : DeleteDialog.Listener{
+    private fun deleteTask(taskUi: TaskUi) {
+        DeleteDialog.showDeleteTask(context as AppCompatActivity, object : DeleteDialog.Listener {
             override fun onClick() {
-                viewModel.deleteTask(task)
+                taskUi.id?.let { viewModel.deleteTask(it) }
             }
         })
     }
 
 
-    override fun onCLickItem(task: Task, state: Int) {
-        when(state){
+    override fun onCLickItem(taskUi: TaskUi, state: Int) {
+        when (state) {
             TaskAdapter.CHECK_BOX -> {
-                viewModel.updateTask(task)
+                viewModel.updateTask(taskUi)
             }
+
             TaskAdapter.EDIT -> {
                 val action =
                     CompletedTasksFragmentDirections.actionCompletedTasksFragmentToAddEditTaskFragment(
-                        task,
+                        taskUi.id?.let { intArrayOf(it) },
                         null
                     )
                 findNavController().navigate(action)
             }
-            TaskAdapter.STAR ->{
-                viewModel.updateTask(task)
+
+            TaskAdapter.STAR -> {
+                viewModel.updateTask(taskUi)
             }
+
             TaskAdapter.DELETE -> {
-                deleteTask(task)
+                deleteTask(taskUi)
             }
         }
-    }
-
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = CompletedTasksFragment()
     }
 }

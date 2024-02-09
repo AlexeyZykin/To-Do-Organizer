@@ -6,30 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vkr_todolist.app.App
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Task
+import com.example.vkr_todolist.cache.room.model.TaskCache
 import com.example.vkr_todolist.databinding.FragmentImportantTasksBinding
 import com.example.vkr_todolist.presentation.dialogs.DeleteDialog
-import com.example.vkr_todolist.presentation.main.MainViewModel
+import com.example.vkr_todolist.presentation.model.TaskUi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class ImportantTasksFragment : Fragment(), TaskAdapter.TaskListener {
     private lateinit var binding: FragmentImportantTasksBinding
     private lateinit var adapter: TaskAdapter
-
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as App).database)
-    }
-
+    private val viewModel by viewModel<TaskViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,15 +37,16 @@ class ImportantTasksFragment : Fragment(), TaskAdapter.TaskListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getImportantTasks()
         initRecyclerView()
-        observer()
+        subscribeObserver()
         initSwipe()
     }
 
 
-    private fun observer(){
-        viewModel.importantTasks.observe(viewLifecycleOwner){
-            adapter.submitList(it)
+    private fun subscribeObserver(){
+        viewModel.tasks.observe(viewLifecycleOwner){
+            it?.let { adapter.submitList(it) }
             binding.emptyImpTasks.run { visibility = if(it.isNullOrEmpty()) View.VISIBLE else View.GONE }
         }
     }
@@ -79,13 +75,12 @@ class ImportantTasksFragment : Fragment(), TaskAdapter.TaskListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
                 val task = adapter.currentList[pos]
-                viewModel.deleteTask(task)
+                task.id?.let { viewModel.deleteTask(it) }
                 Snackbar.make(binding.root, R.string.snackbar_deleted, Snackbar.LENGTH_LONG)
                     .apply {
                         setAction(R.string.undo) {
-                            //viewModel.insertTask(task)
                             lifecycleScope.launch {
-                                viewModel.insertTask(task)
+                                viewModel.addTask(task)
                             }
                         }
                         show()
@@ -98,41 +93,35 @@ class ImportantTasksFragment : Fragment(), TaskAdapter.TaskListener {
     }
 
 
-    private fun deleteTask(task: Task){
+    private fun deleteTask(taskUi: TaskUi){
         DeleteDialog.showDeleteTask(context as AppCompatActivity, object : DeleteDialog.Listener{
             override fun onClick() {
-                viewModel.deleteTask(task)
+                taskUi.id?.let { viewModel.deleteTask(it) }
             }
         })
     }
 
 
-    override fun onCLickItem(task: Task, state: Int) {
+    override fun onCLickItem(taskUi: TaskUi, state: Int) {
         when(state){
             TaskAdapter.CHECK_BOX -> {
-                viewModel.updateTask(task)
+                viewModel.updateTask(taskUi)
             }
             TaskAdapter.EDIT -> {
                 val action =
                     ImportantTasksFragmentDirections.actionImportantTasksFragmentToAddEditTaskFragment(
-                        task,
+                        taskUi.id?.let { intArrayOf(it) },
                         null
                     )
                 findNavController().navigate(action)
                 
             }
             TaskAdapter.STAR ->{
-                viewModel.updateTask(task)
+                viewModel.updateTask(taskUi)
             }
             TaskAdapter.DELETE -> {
-                deleteTask(task)
+                deleteTask(taskUi)
             }
         }
-    }
-
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = ImportantTasksFragment()
     }
 }

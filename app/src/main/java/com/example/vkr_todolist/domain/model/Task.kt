@@ -7,7 +7,7 @@ data class Task(
     var title: String,
     var description: String?,
     var checked: Boolean=false,
-    var list: List,
+    var list: ListModel,
     var date: Date?,
     var createdDate: Date,
     var isImportant: Boolean=false,

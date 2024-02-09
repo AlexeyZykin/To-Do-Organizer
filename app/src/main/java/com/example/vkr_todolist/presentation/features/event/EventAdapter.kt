@@ -1,4 +1,5 @@
 package com.example.vkr_todolist.presentation.features.event
+
 import android.content.Context
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -8,16 +9,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vkr_todolist.R
-import com.example.vkr_todolist.cache.room.model.Event
+import com.example.vkr_todolist.cache.room.model.EventCache
 import com.example.vkr_todolist.databinding.ItemEventsBinding
+import com.example.vkr_todolist.presentation.model.EventUi
 import com.example.vkr_todolist.presentation.utils.DateTimeManager
 
 
-class EventAdapter(private val listener: EventListener, private val context: Context): ListAdapter<Event, EventAdapter.EventViewHolder>(
-    DiffCallback()
-){
-
-
+class EventAdapter(private val listener: EventListener, private val context: Context) :
+    ListAdapter<EventUi, EventAdapter.EventViewHolder>(
+        DiffCallback()
+    ) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,33 +31,33 @@ class EventAdapter(private val listener: EventListener, private val context: Con
         holder.bind(getItem(position), listener, context)
     }
 
-    class EventViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var countDownTimer: CountDownTimer? = null
-       private val binding = ItemEventsBinding.bind(view)
-        fun bind(event: Event, listener: EventListener, context: Context)= with(binding)  {
-            tvEventTitle.text = event.eventTitle
-            tvListName.text = event.listName
+        private val binding = ItemEventsBinding.bind(view)
+        fun bind(eventUi: EventUi, listener: EventListener, context: Context) =
+            with(binding) {
+                tvEventTitle.text = eventUi.title
+                tvListName.text = eventUi.list.title
 
-            if(event.date!! > DateTimeManager.getCurrentDate())
-                countDownTimer(event, context)
-            else
-                countTime.text = context.getString(R.string.countdown_finished)
+                if (eventUi.date > DateTimeManager.getCurrentDate())
+                    countDownTimer(eventUi, context)
+                else
+                    countTime.text = context.getString(R.string.countdown_finished)
 
-            eventCardView.setOnClickListener {
-                listener.onCLickItem(event, EDIT)
+                eventCardView.setOnClickListener {
+                    listener.onCLickItem(eventUi, EDIT)
+                }
+
+                root.setOnLongClickListener {
+                    listener.onCLickItem(eventUi, DELETE)
+                    true
+                }
             }
 
-            root.setOnLongClickListener {
-                listener.onCLickItem(event, DELETE)
-                true
-            }
-        }
-
-
-        private fun countDownTimer(event: Event, context: Context){
+        private fun countDownTimer(eventUi: EventUi, context: Context) {
             countDownTimer?.cancel()
             countDownTimer = object : CountDownTimer(
-                event.date!!.time - System.currentTimeMillis(),
+                eventUi.date.time - System.currentTimeMillis(),
                 1000
             ) {
                 override fun onTick(millisUntilFinished: Long) {
@@ -70,7 +71,6 @@ class EventAdapter(private val listener: EventListener, private val context: Con
             (countDownTimer as CountDownTimer).start()
         }
 
-
         private fun getTimeString(millis: Long): String {
             val seconds = millis / 1000
             val minutes = seconds / 60
@@ -78,7 +78,7 @@ class EventAdapter(private val listener: EventListener, private val context: Con
             val days = hours / 24
             return when {
                 days > 0 -> "${days}д ${hours % 24}ч"
-                hours > 0  -> "${hours}ч ${minutes % 60}мин"
+                hours > 0 -> "${hours}ч ${minutes % 60}мин"
                 else -> "${minutes % 60}мин ${seconds % 60}сек"
             }
         }
@@ -98,21 +98,21 @@ class EventAdapter(private val listener: EventListener, private val context: Con
     }
 
     interface EventListener {
-        fun onCLickItem(event: Event, state: Int)
+        fun onCLickItem(eventUi: EventUi, state: Int)
     }
 
 
-    class DiffCallback: DiffUtil.ItemCallback<Event>(){
-        override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
-            return oldItem.eventId == newItem.eventId
+    class DiffCallback : DiffUtil.ItemCallback<EventUi>() {
+        override fun areItemsTheSame(oldItem: EventUi, newItem: EventUi): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
-            return oldItem==newItem
+        override fun areContentsTheSame(oldItem: EventUi, newItem: EventUi): Boolean {
+            return oldItem == newItem
         }
     }
 
-    companion object{
+    companion object {
         const val EDIT = 1
         const val DELETE = 7
     }

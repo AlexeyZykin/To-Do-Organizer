@@ -46,16 +46,16 @@
         tools:layout="@layout/fragment_productivity" />
     <fragment
         android:id="@+id/addEditNoteFragment"
-        android:name="com.example.vkr_todolist.presentation.features.note.AddEditNoteFragment"
+        android:name="com.example.vkr_todolist.presentation.features.note.addEditNote.AddEditNoteFragment"
         android:label="@string/create_note"
         tools:layout="@layout/fragment_add_edit_note" >
         <argument
-            android:name="note"
-            app:argType="com.example.vkr_todolist.cache.room.model.Note"
-            app:nullable="true"/>
+            android:name="noteId"
+            app:argType="integer[]"
+            app:nullable="true" />
         <argument
-            android:name="listName"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
+            android:name="listId"
+            app:argType="integer[]"
             app:nullable="true" />
     </fragment>
     <fragment
@@ -64,12 +64,12 @@
         android:label="@string/create_task"
         tools:layout="@layout/fragment_add_edit_task" >
         <argument
-            android:name="task"
-            app:argType="com.example.vkr_todolist.cache.room.model.Task"
+            android:name="taskId"
+            app:argType="integer[]"
             app:nullable="true" />
         <argument
-            android:name="listName"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
+            android:name="listId"
+            app:argType="integer[]"
             app:nullable="true" />
     </fragment>
     <fragment
@@ -83,19 +83,15 @@
         android:label="@string/create_list"
         tools:layout="@layout/fragment_add_edit_list" >
         <argument
-            android:name="listItem"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
-            app:nullable="true"
-            />
+            android:name="listId"
+            app:argType="integer[]"
+            app:nullable="true" />
     </dialog>
     <fragment
         android:id="@+id/listFragment"
         android:name="com.example.vkr_todolist.presentation.features.list.ListFragment"
         android:label="@string/list"
         tools:layout="@layout/fragment_list" >
-        <argument
-            android:name="listItem"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
         <action
             android:id="@+id/action_listFragment_to_addEditListFragment"
             app:destination="@id/addEditListFragment" />
@@ -110,6 +106,9 @@
         <action
             android:id="@+id/action_listFragment_to_addEditEventFragment"
             app:destination="@id/addEditEventFragment" />
+        <argument
+            android:name="listId"
+            app:argType="integer" />
     </fragment><action android:id="@+id/action_global_addEditListFragment" app:destination="@id/addEditListFragment"/>
     <fragment
         android:id="@+id/listOfTasksFragment"
@@ -118,7 +117,7 @@
         tools:layout="@layout/fragment_list_of_tasks" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListCache" />
     </fragment>
     <fragment
         android:id="@+id/listOfNotesFragment"
@@ -127,7 +126,7 @@
         tools:layout="@layout/fragment_list_of_notes" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListCache" />
     </fragment>
     <action
         android:id="@+id/action_global_listFragment"
@@ -231,16 +230,16 @@
         app:popExitAnim="@anim/push_right_out" />
     <dialog
         android:id="@+id/addEditEventFragment"
-        android:name="com.example.vkr_todolist.presentation.features.event.AddEditEventFragment"
+        android:name="com.example.vkr_todolist.presentation.features.event.addEditEvent.AddEditEventFragment"
         android:label="fragment_add_edit_event"
         tools:layout="@layout/fragment_add_edit_event" >
         <argument
-            android:name="event"
-            app:argType="com.example.vkr_todolist.cache.room.model.Event"
+            android:name="eventId"
+            app:argType="integer[]"
             app:nullable="true" />
         <argument
-            android:name="listName"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem"
+            android:name="listId"
+            app:argType="integer[]"
             app:nullable="true" />
     </dialog>
     <fragment
@@ -250,7 +249,7 @@
         tools:layout="@layout/fragment_list_of_events" >
         <argument
             android:name="listItem"
-            app:argType="com.example.vkr_todolist.cache.room.model.ListItem" />
+            app:argType="com.example.vkr_todolist.cache.room.model.ListCache" />
     </fragment>
     <fragment
         android:id="@+id/pomodoroTimerFragment"
